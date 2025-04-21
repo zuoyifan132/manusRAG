@@ -89,8 +89,6 @@ if "processing_files" not in st.session_state:
     st.session_state.processing_files = False
 if "ui_update_counter" not in st.session_state:
     st.session_state.ui_update_counter = 0
-if "last_uploaded_files_hash" not in st.session_state:
-    st.session_state.last_uploaded_files_hash = None
 
 # 初始化侧边栏
 rag_sidebar = RagSidebar()
@@ -107,52 +105,199 @@ def process_query(query):
         st.session_state.rag_messages.append({"role": "user", "content": query})
         st.session_state.ui_update_counter += 1
 
-# 文件上传函数，更新文件列表和状态
+# 实际处理文件列表
 @st.cache_resource
-def update_file_list(uploaded_files, is_config_mode=False):
-    if not uploaded_files:
-        st.session_state.temp_files = []
-        st.session_state.target_files = []
-        st.session_state.file_status = {}
-        st.session_state.last_uploaded_files_hash = None
-        return
+def update_file_list(target_files, temp_files, file_status, uploaded_files, is_config_mode=False):
+    """
+    处理并更新文件列表，使用缓存以避免重复计算
     
-    # # 生成当前上传文件的hash用于比较
-    # try:
-    #     # 使用文件名和大小创建唯一标识
-    #     current_files_hash = hash(tuple(sorted([(f.name, f.size) for f in uploaded_files])))
-        
-    #     # 检查是否与上次相同
-    #     if current_files_hash == st.session_state.last_uploaded_files_hash:
-    #         # 如果相同，说明没有真正的新文件上传，直接返回
-    #         return
-        
-    #     # 更新hash值
-    #     st.session_state.last_uploaded_files_hash = current_files_hash
-    # except Exception as e:
-    #     # 如果生成hash出错，记录错误但继续执行
-    #     logger.error(f"生成文件hash时出错: {str(e)}")
-        
+    参数:
+    uploaded_files - 上传的文件列表
+    is_config_mode - 是否是配置模式
+    
+    返回:
+    (temp_files, target_files, file_status) 元组，包含处理后的文件列表、目标文件和状态
+    """
+    if not uploaded_files:
+        return [], [], {}
+    
+    # existing_temp_files = st.session_state.temp_files if "temp_files" in st.session_state else []
+    existing_temp_files = temp_files
+    # existing_target_files = st.session_state.target_files if "target_files" in st.session_state else []
+    existing_target_files = target_files
+    # existing_file_status = st.session_state.file_status if "file_status" in st.session_state else {}
+    existing_file_status = file_status
+    
     current_file_names = {f.name for f in uploaded_files}
-    existing_file_names = {f["文件名"] for f in st.session_state.temp_files}
-    selected_file_names = {f["文件名"] for f in st.session_state.target_files}
+    existing_file_names = {f["文件名"] for f in existing_temp_files}
+    selected_file_names = {f["文件名"] for f in existing_target_files}
 
-    preserved_status = {name: status for name, status in st.session_state.file_status.items() if name in current_file_names}
-
+    preserved_status = {name: status for name, status in existing_file_status.items() if name in current_file_names}
+    
+    # 生成新的文件列表
     if current_file_names != existing_file_names and not is_config_mode:
-        new_temp_files = [
-            {
+        new_temp_files = []
+        for file in uploaded_files:
+            # 如果文件状态为"正在删除"，则跳过此文件
+            if preserved_status.get(file.name) == "正在删除":
+                continue
+                
+            new_temp_files.append({
                 "文件名": file.name,
                 "类型": file.type,
                 "大小": f"{round(file.size / 1024, 2)} KB",
                 "状态": preserved_status.get(file.name, "等待处理"),
                 "文件对象": file,
                 "配置模式": is_config_mode
-            } for file in uploaded_files
-        ]
-        st.session_state.temp_files = new_temp_files
-        st.session_state.target_files = [file for file in new_temp_files if file["文件名"] in selected_file_names]
-    st.session_state.file_status = {f["文件名"]: f["状态"] for f in st.session_state.temp_files}
+            })
+        
+        new_target_files = [file for file in new_temp_files if file["文件名"] in selected_file_names]
+    else:
+        new_temp_files = existing_temp_files
+        new_target_files = existing_target_files
+    
+    # 生成新的文件状态，保留"正在删除"状态
+    new_file_status = {}
+    
+    # 保留原有的"正在删除"状态
+    for name, status in existing_file_status.items():
+        if status == "正在删除":
+            new_file_status[name] = status
+    
+    # 添加当前文件的状态
+    for f in new_temp_files:
+        if f["文件名"] not in new_file_status:  # 不覆盖"正在删除"状态
+            new_file_status[f["文件名"]] = f["状态"]
+    
+    return new_temp_files, new_target_files, new_file_status
+
+# 应用update_file_list的结果到session_state
+def apply_file_list_update(uploaded_files, is_config_mode=False, action=None, selected_files=None):
+    """
+    应用文件列表更新结果到session_state
+    
+    参数:
+    uploaded_files - 上传的文件列表
+    is_config_mode - 是否是配置模式
+    action - 要执行的操作: 'select_all', 'deselect_all', 'delete_selected'
+    selected_files - 当action为'delete_selected'时，要删除的文件列表
+    """
+    if not uploaded_files:
+        st.session_state.temp_files = []
+        st.session_state.target_files = []
+        st.session_state.file_status = {}
+        return
+    
+    # 获取当前缓存的文件列表
+    target_files = st.session_state.target_files
+    temp_files = st.session_state.temp_files
+    file_status = st.session_state.file_status
+    
+    # 处理删除操作 - 先标记要删除的文件
+    if action == 'delete_selected' and selected_files:
+        # 获取要删除的文件名
+        selected_file_names = {f["文件名"] for f in selected_files}
+        temp_files = [f for f in temp_files if f["文件名"] not in selected_file_names]
+        target_files = []
+        # 标记这些文件为"正在删除"状态
+        for file_name in selected_file_names:
+            file_status[file_name] = "正在删除"
+    
+    # 更新文件列表
+    temp_files, target_files, file_status = update_file_list(
+        target_files, 
+        temp_files, 
+        file_status,
+        uploaded_files, 
+        is_config_mode=is_config_mode
+    )
+    
+    # 根据action执行相应操作
+    if action == 'select_all':
+        target_files = temp_files.copy()
+            
+    elif action == 'deselect_all':
+        # 清空目标文件列表
+        target_files = []
+            
+    elif action == 'delete_selected' and selected_files:
+        # 清空目标文件列表（已被选中的文件已经标记为"正在删除"并被跳过）
+        target_files = []
+    
+    # 更新session_state
+    st.session_state.temp_files = temp_files
+    st.session_state.target_files = target_files
+    st.session_state.file_status = file_status
+    
+    # 如果是删除操作，则增加ui_update_counter以触发UI更新
+    if action == 'delete_selected':
+        st.session_state.ui_update_counter += 1
+
+# 全选函数
+def select_all_files():
+    if use_config := st.session_state.use_config_file:
+        uploaded_files = st.session_state.get('config_file_uploader', [])
+    else:
+        uploaded_files = st.session_state.get('regular_file_uploader', [])
+    
+    apply_file_list_update(uploaded_files, is_config_mode=use_config, action='select_all')
+
+# 取消全选函数
+def deselect_all_files():
+    if use_config := st.session_state.use_config_file:
+        uploaded_files = st.session_state.get('config_file_uploader', [])
+    else:
+        uploaded_files = st.session_state.get('regular_file_uploader', [])
+    
+    apply_file_list_update(uploaded_files, is_config_mode=use_config, action='deselect_all')
+
+# 删除所选文件函数
+def delete_selected_files():
+    if use_config := st.session_state.use_config_file:
+        uploaded_files = st.session_state.get('config_file_uploader', [])
+    else:
+        uploaded_files = st.session_state.get('regular_file_uploader', [])
+    
+    apply_file_list_update(
+        uploaded_files, 
+        is_config_mode=use_config, 
+        action='delete_selected', 
+        selected_files=st.session_state.target_files
+    )
+
+# 切换文件选择状态函数
+def toggle_file_selection(file_name, is_selected):
+    if use_config := st.session_state.use_config_file:
+        uploaded_files = st.session_state.get('config_file_uploader', [])
+    else:
+        uploaded_files = st.session_state.get('regular_file_uploader', [])
+    
+    # 获取当前缓存的文件列表
+    target_files = st.session_state.target_files
+    temp_files = st.session_state.temp_files
+    file_status = st.session_state.file_status
+    temp_files, target_files, file_status = update_file_list(
+        target_files, 
+        temp_files, 
+        file_status, 
+        uploaded_files, 
+        is_config_mode=use_config
+    )
+    
+    if is_selected:
+        # 找到要选择的文件并添加到目标列表
+        for file in temp_files:
+            if file["文件名"] == file_name and not any(t["文件名"] == file_name for t in target_files):
+                target_files.append(file.copy())
+                break
+    else:
+        # 从目标文件列表中移除文件
+        target_files = [f for f in target_files if f["文件名"] != file_name]
+    
+    # 更新状态
+    st.session_state.temp_files = temp_files
+    st.session_state.target_files = target_files
+    st.session_state.file_status = file_status
 
 # 处理单个文件
 def process_single_file(file_info, config_path):
@@ -188,76 +333,6 @@ def process_single_file(file_info, config_path):
             os.remove(temp_file_path)
         return False
 
-# 全选函数
-def select_all_files():
-    st.session_state.target_files = [file.copy() for file in st.session_state.temp_files]
-    # 将所有文件的状态设置为"被选中"
-    for file in st.session_state.temp_files:
-        st.session_state.file_status[file["文件名"]] = "被选中"
-    st.session_state.ui_update_counter += 1
-
-# 取消全选函数
-def deselect_all_files():
-    # 保存之前文件的原始状态
-    original_statuses = {}
-    for file in st.session_state.temp_files:
-        file_name = file["文件名"]
-        if file_name in st.session_state.file_status and st.session_state.file_status[file_name] == "被选中":
-            # 如果状态是"被选中"，恢复到原始状态
-            original_statuses[file_name] = file.get("状态", "等待处理")
-    
-    # 清空目标文件列表
-    st.session_state.target_files = []
-    
-    # 恢复文件状态
-    for file_name, status in original_statuses.items():
-        st.session_state.file_status[file_name] = status
-    
-    st.session_state.ui_update_counter += 1
-
-# 删除所选文件函数
-def delete_selected_files():
-    selected_file_names = {f["文件名"] for f in st.session_state.target_files}
-    
-    # 将选中的文件状态改为"正在删除"
-    for file_name in selected_file_names:
-        for f in st.session_state.temp_files:
-            if f["文件名"] == file_name:
-                st.session_state.file_status[file_name] = "正在删除"
-                break
-    
-    # 先清空目标文件列表
-    st.session_state.target_files = []
-    # 然后更新临时文件列表
-    st.session_state.temp_files = [f for f in st.session_state.temp_files if f["文件名"] not in selected_file_names]
-    # 确保UI更新
-    st.session_state.ui_update_counter += 1
-    # 添加显式的重新渲染触发
-    # st.rerun()
-
-# 切换文件选择状态函数
-def toggle_file_selection(file_name, is_selected):
-    if is_selected:
-        if not any(f["文件名"] == file_name for f in st.session_state.target_files):
-            # 找到文件并将其添加到目标文件列表
-            for file in st.session_state.temp_files:
-                if file["文件名"] == file_name:
-                    st.session_state.target_files.append(file.copy())
-                    # 设置文件状态为"被选中"
-                    st.session_state.file_status[file_name] = "被选中"
-                    break
-    else:
-        # 从目标文件列表中移除，同时重置状态
-        st.session_state.target_files = [f for f in st.session_state.target_files if f["文件名"] != file_name]
-        # 如果状态是"被选中"，则恢复为之前的状态或默认状态
-        if file_name in st.session_state.file_status and st.session_state.file_status[file_name] == "被选中":
-            # 查找原始状态
-            for f in st.session_state.temp_files:
-                if f["文件名"] == file_name:
-                    # 如果temp_files中有状态，则恢复为那个状态，否则设为默认值"等待处理"
-                    st.session_state.file_status[file_name] = f.get("状态", "等待处理")
-                    break
-
 # 主要功能区域
 with st.container():
     st.subheader("📚 上传知识库文件")
@@ -270,14 +345,15 @@ with st.container():
             ingest_config_path = st.text_input("知识库摄入配置路径", value=DEFAULT_INGEST_CONFIG, help="请输入处理文件的配置文件路径")
             st.markdown("**上传文件覆盖配置中的文档路径**")
             uploaded_config_files = st.file_uploader("选择或拖拽文件到这里", accept_multiple_files=True, type=["pdf", "docx", "txt", "md", "csv", "json"], help="上传的文件将覆盖配置中的doc_path", key="config_file_uploader")
-            update_file_list(uploaded_config_files, is_config_mode=True)
+            apply_file_list_update(uploaded_config_files, is_config_mode=True)
         else:
             uploaded_files = st.file_uploader("选择或拖拽文件到这里", accept_multiple_files=True, type=["pdf", "docx", "txt", "md", "csv", "json"], help="支持多种文件格式", key="regular_file_uploader")
-            update_file_list(uploaded_files, is_config_mode=False)
+            apply_file_list_update(uploaded_files, is_config_mode=False)
 
         if st.session_state.temp_files:
             st.markdown('<div id="file_list_anchor"></div>', unsafe_allow_html=True)
             st.markdown("### 文件列表")
+            # 确保is_selected反映当前的选择状态
             is_selected = {f["文件名"]: any(t["文件名"] == f["文件名"] for t in st.session_state.target_files) for f in st.session_state.temp_files}
             
             df = pd.DataFrame([
@@ -285,6 +361,10 @@ with st.container():
                 for f in st.session_state.temp_files
             ])
 
+            # 使用唯一的key以避免在状态变化时过度重新渲染
+            @st.cache_data
+            def get_key():
+                return f"file_editor_{st.session_state.ui_update_counter+1}"
             edited_df = st.data_editor(
                 df,
                 column_config={
@@ -294,25 +374,28 @@ with st.container():
                 disabled=["文件名", "类型", "大小", "状态"],
                 use_container_width=True,
                 hide_index=True,
-                key=f"file_editor_{st.session_state.ui_update_counter}"
+                key=get_key()
             )
             
+            # 处理勾选状态变化
             for i, row in edited_df.iterrows():
                 file_name = row["文件名"]
                 is_selected = row["选择"]
+                # 判断是否已经被选择
                 current_selected = any(f["文件名"] == file_name for f in st.session_state.target_files)
                 if current_selected != is_selected:
                     toggle_file_selection(file_name, is_selected)
-                    st.session_state.ui_update_counter += 1
-                    
-            col1_1, col1_2, col1_3 = st.columns([1, 1, 2])
-            with col1_1:
-                st.button("全选", use_container_width=True, on_click=select_all_files)
-            with col1_2:
-                st.button("取消全选", use_container_width=True, on_click=deselect_all_files)
-            with col1_3:
-                st.button("删除所选文件", use_container_width=True, type="secondary", on_click=delete_selected_files)
+                    # 确保UI更新，但在勾选多个时可能会导致重新渲染
+                    st.rerun()
         
+        col1_1, col1_2, col1_3 = st.columns([1, 1, 2])
+        with col1_1:
+            st.button("全选", use_container_width=True, on_click=select_all_files)
+        with col1_2:
+            st.button("取消全选", use_container_width=True, on_click=deselect_all_files)
+        with col1_3:
+            st.button("删除所选文件", use_container_width=True, type="secondary", on_click=delete_selected_files)
+
         button_label = "使用配置文件处理所选文件" if use_config else "处理所选文件"
 
         has_selected = len(st.session_state.target_files) > 0
