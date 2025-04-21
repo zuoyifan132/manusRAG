@@ -1,0 +1,6 @@
+"""
+配置文件
+"""
+# RERANKER_API_URL = "http://10.100.167.66:13456/rerank"
+REQUEST_TIMEOUT = 30
+MAX_RETRIES = 3

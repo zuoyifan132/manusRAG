@@ -1,0 +1,56 @@
+{
+  "doc_2_text": {
+    "strategy": {
+      "pdf": "minerU",
+      "md": "naive"
+    },
+    "doc_path": "../test/dummy_file/DeepSeek_R1.pdf"
+  },
+  "chunk_text": [
+    {
+      "file_type": "pdf",
+      "strategy": "markdown",
+      "params": {
+        "format_chunk_flag": true
+      }
+    },
+    {
+      "file_type": "md",
+      "strategy": "markdown",
+      "params": {}
+    }
+  ],
+  "ingest_text": [
+    {
+      "type": "milvus",
+      "params": {
+        "batch_size_limit": 64,
+        "collection_name": "test_service_collection_20150416",
+        "expand_fields" : [{"name": "doc_id", "dtype": "INT64"}],
+        "expand_fields_values" : {"doc_id":123}        
+      }
+    }
+  ],
+  "retrieval": [
+    {
+      "type": "milvus",
+      "params":{
+        "top_k": 100,
+        "collection_name": "test_service_collection_20150416"
+      }
+    }
+  ],
+  "rerank": [
+    {
+        "strategy": "bge-reranker-v2-m3",
+        "params": {
+          "top_k": 10
+        }
+    }
+  ],
+  "aigc": {
+      "model": "openai",
+      "aigc_params": {}
+  },
+  "base_url": "http://127.0.0.1:17724"
+}

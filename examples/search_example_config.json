@@ -1,0 +1,20 @@
+{
+  "retrieval": [
+    {
+      "type": "milvus",
+      "params":{
+        "top_k": 100,
+        "collection_name": "test_service_collection_20150416"
+      }
+    }
+  ],
+  "rerank": [
+    {
+        "strategy": "bge-reranker-v2-m3",
+        "params": {
+          "top_k": 10
+        }
+    }
+  ],
+  "base_url": "http://127.0.0.1:17724"
+}
