@@ -89,6 +89,8 @@ if "processing_files" not in st.session_state:
     st.session_state.processing_files = False
 if "ui_update_counter" not in st.session_state:
     st.session_state.ui_update_counter = 0
+if "milvus_status" not in st.session_state:
+    st.session_state.milvus_status = None
 
 # 初始化侧边栏
 rag_sidebar = RagSidebar()
@@ -109,110 +111,108 @@ def process_query(query):
 
 # 实际处理文件列表
 @st.cache_resource
-def update_file_list(target_files, temp_files, file_status, uploaded_files, is_config_mode=False):
+def update_file_list(target_files, temp_files, file_status, uploaded_files):
     """
     处理并更新文件列表，使用缓存以避免重复计算
     
     参数:
     uploaded_files - 上传的文件列表
-    is_config_mode - 是否是配置模式
     
     返回:
     (temp_files, target_files, file_status) 元组，包含处理后的文件列表、目标文件和状态
     """
     if not uploaded_files:
-        return [], [], {}
+        return temp_files, target_files, file_status
     
-    # existing_temp_files = st.session_state.temp_files if "temp_files" in st.session_state else []
     existing_temp_files = temp_files
-    # existing_target_files = st.session_state.target_files if "target_files" in st.session_state else []
     existing_target_files = target_files
-    # existing_file_status = st.session_state.file_status if "file_status" in st.session_state else {}
     existing_file_status = file_status
     
+    # 获取现有文件名与上传文件名
     current_file_names = {f.name for f in uploaded_files}
     existing_file_names = {f["文件名"] for f in existing_temp_files}
     selected_file_names = {f["文件名"] for f in existing_target_files}
 
+    # 保存已知文件的状态
     preserved_status = {name: status for name, status in existing_file_status.items() if name in current_file_names}
     
-    # 生成新的文件列表
-    if current_file_names != existing_file_names and not is_config_mode:
-        new_temp_files = []
-        for file in uploaded_files:
-            # 如果文件状态为"正在删除"，则跳过此文件
-            if preserved_status.get(file.name) == "正在删除":
-                continue
-                
-            new_temp_files.append({
-                "文件名": file.name,
-                "类型": file.type,
-                "大小": f"{round(file.size / 1024, 2)} KB",
-                "状态": preserved_status.get(file.name, "等待处理"),
-                "文件对象": file,
-                "配置模式": is_config_mode
-            })
-        
-        new_target_files = [file for file in new_temp_files if file["文件名"] in selected_file_names]
-    else:
-        new_temp_files = existing_temp_files
-        new_target_files = existing_target_files
+    # 创建上传文件的字典，用于快速查找
+    uploaded_files_dict = {f.name: f for f in uploaded_files}
     
-    # 生成新的文件状态，保留"正在删除"状态
-    new_file_status = {}
+    # 合并文件列表
+    new_temp_files = []
     
-    # 保留原有的"正在删除"状态
-    for name, status in existing_file_status.items():
-        if status == "正在删除":
-            new_file_status[name] = status
+    # 先添加原有文件（不在上传文件中的文件）
+    for file in existing_temp_files:
+        if file["文件名"] not in current_file_names:
+            new_temp_files.append(file)
     
-    # 添加当前文件的状态
+    # 添加所有上传的文件
+    for file_name, file in uploaded_files_dict.items():
+        new_temp_files.append({
+            "文件名": file_name,
+            "类型": file.type,
+            "大小": f"{round(file.size / 1024, 2)} KB",
+            "状态": preserved_status.get(file_name, "等待处理"),
+            "文件对象": file
+        })
+    
+    # 更新目标文件列表，保留之前选择的文件
+    new_target_files = [f for f in existing_target_files if f["文件名"] not in current_file_names]
+    
+    # 在普通模式下，只添加那些之前已经被选中的文件
+    for file in new_temp_files:
+        if file["文件名"] in current_file_names and file["文件名"] in selected_file_names:
+            if not any(t["文件名"] == file["文件名"] for t in new_target_files):
+                new_target_files.append(file)
+    
+    # 生成新的文件状态
+    new_file_status = existing_file_status.copy()
+    
+    # 更新上传文件的状态
     for f in new_temp_files:
-        if f["文件名"] not in new_file_status:  # 不覆盖"正在删除"状态
-            new_file_status[f["文件名"]] = f["状态"]
+        new_file_status[f["文件名"]] = f["状态"]
     
     return new_temp_files, new_target_files, new_file_status
 
 # 应用update_file_list的结果到session_state
-def apply_file_list_update(uploaded_files, is_config_mode=False, action=None, selected_files=None):
+def apply_file_list_update(uploaded_files, action=None, selected_files=None):
     """
     应用文件列表更新结果到session_state
     
     参数:
     uploaded_files - 上传的文件列表
-    is_config_mode - 是否是配置模式
     action - 要执行的操作: 'select_all', 'deselect_all', 'delete_selected'
     selected_files - 当action为'delete_selected'时，要删除的文件列表
     """
-    if not uploaded_files:
-        st.session_state.temp_files = []
-        st.session_state.target_files = []
-        st.session_state.file_status = {}
-        return
-    
     # 获取当前缓存的文件列表
     target_files = st.session_state.target_files
     temp_files = st.session_state.temp_files
     file_status = st.session_state.file_status
     
-    # 处理删除操作 - 先标记要删除的文件
+    # 处理删除操作 - 直接从列表中移除文件
     if action == 'delete_selected' and selected_files:
         # 获取要删除的文件名
         selected_file_names = {f["文件名"] for f in selected_files}
         temp_files = [f for f in temp_files if f["文件名"] not in selected_file_names]
-        target_files = []
-        # 标记这些文件为"正在删除"状态
+        target_files = [f for f in target_files if f["文件名"] not in selected_file_names]
+        # 从file_status中移除已删除文件的状态
         for file_name in selected_file_names:
-            file_status[file_name] = "正在删除"
+            if file_name in file_status:
+                del file_status[file_name]
     
-    # 更新文件列表
-    temp_files, target_files, file_status = update_file_list(
-        target_files, 
-        temp_files, 
-        file_status,
-        uploaded_files, 
-        is_config_mode=is_config_mode
-    )
+    # 当有上传文件时，更新文件列表
+    if uploaded_files:
+        # 如果是新文件上传，先更新文件列表
+        new_temp_files, new_target_files, new_file_status = update_file_list(
+            target_files, 
+            temp_files, 
+            file_status,
+            uploaded_files
+        )
+        temp_files = new_temp_files
+        target_files = new_target_files
+        file_status = new_file_status
     
     # 根据action执行相应操作
     if action == 'select_all':
@@ -222,10 +222,6 @@ def apply_file_list_update(uploaded_files, is_config_mode=False, action=None, se
         # 清空目标文件列表
         target_files = []
             
-    elif action == 'delete_selected' and selected_files:
-        # 清空目标文件列表（已被选中的文件已经标记为"正在删除"并被跳过）
-        target_files = []
-    
     # 更新session_state
     st.session_state.temp_files = temp_files
     st.session_state.target_files = target_files
@@ -237,54 +233,34 @@ def apply_file_list_update(uploaded_files, is_config_mode=False, action=None, se
 
 # 全选函数
 def select_all_files():
-    if use_config := st.session_state.use_config_file:
-        uploaded_files = st.session_state.get('config_file_uploader', [])
-    else:
-        uploaded_files = st.session_state.get('regular_file_uploader', [])
-    
-    apply_file_list_update(uploaded_files, is_config_mode=use_config, action='select_all')
+    # 先更新UI counter以刷新file_uploader
+    st.session_state.ui_update_counter += 1
+    # 直接应用全选操作，不需要获取当前uploaded_files
+    apply_file_list_update([], action='select_all')
 
 # 取消全选函数
 def deselect_all_files():
-    if use_config := st.session_state.use_config_file:
-        uploaded_files = st.session_state.get('config_file_uploader', [])
-    else:
-        uploaded_files = st.session_state.get('regular_file_uploader', [])
-    
-    apply_file_list_update(uploaded_files, is_config_mode=use_config, action='deselect_all')
+    # 先更新UI counter以刷新file_uploader
+    st.session_state.ui_update_counter += 1
+    # 直接应用取消全选操作，不需要获取当前uploaded_files
+    apply_file_list_update([], action='deselect_all')
 
 # 删除所选文件函数
 def delete_selected_files():
-    if use_config := st.session_state.use_config_file:
-        uploaded_files = st.session_state.get('config_file_uploader', [])
-    else:
-        uploaded_files = st.session_state.get('regular_file_uploader', [])
-    
+    # 先更新UI counter以刷新file_uploader
+    st.session_state.ui_update_counter += 1
+    # 直接应用删除操作，不需要获取当前uploaded_files
     apply_file_list_update(
-        uploaded_files, 
-        is_config_mode=use_config, 
+        [], 
         action='delete_selected', 
         selected_files=st.session_state.target_files
     )
 
 # 切换文件选择状态函数
 def toggle_file_selection(file_name, is_selected):
-    if use_config := st.session_state.use_config_file:
-        uploaded_files = st.session_state.get('config_file_uploader', [])
-    else:
-        uploaded_files = st.session_state.get('regular_file_uploader', [])
-    
     # 获取当前缓存的文件列表
     target_files = st.session_state.target_files
     temp_files = st.session_state.temp_files
-    file_status = st.session_state.file_status
-    temp_files, target_files, file_status = update_file_list(
-        target_files, 
-        temp_files, 
-        file_status, 
-        uploaded_files, 
-        is_config_mode=use_config
-    )
     
     if is_selected:
         # 找到要选择的文件并添加到目标列表
@@ -297,9 +273,10 @@ def toggle_file_selection(file_name, is_selected):
         target_files = [f for f in target_files if f["文件名"] != file_name]
     
     # 更新状态
-    st.session_state.temp_files = temp_files
     st.session_state.target_files = target_files
-    st.session_state.file_status = file_status
+    
+    # 更新UI counter以刷新file_uploader
+    st.session_state.ui_update_counter += 1
 
 # 处理单个文件
 def process_single_file(file_info, config_path):
@@ -346,11 +323,35 @@ with st.container():
         if use_config:
             ingest_config_path = st.text_input("知识库摄入配置路径", value=DEFAULT_INGEST_CONFIG, help="请输入处理文件的配置文件路径")
             st.markdown("**上传文件覆盖配置中的文档路径**")
-            uploaded_config_files = st.file_uploader("选择或拖拽文件到这里", accept_multiple_files=True, type=["pdf", "docx", "txt", "md", "csv", "json"], help="上传的文件将覆盖配置中的doc_path", key="config_file_uploader")
-            apply_file_list_update(uploaded_config_files, is_config_mode=True)
+            # 使用ui_update_counter作为key的一部分，以确保每次更新时重新创建file_uploader
+            config_uploader_key = f"config_file_uploader_{st.session_state.ui_update_counter}"
+            uploaded_config_files = st.file_uploader(
+                "选择或拖拽文件到这里", 
+                accept_multiple_files=True, 
+                type=["pdf", "docx", "txt", "md", "csv", "json"], 
+                help="上传的文件将覆盖配置中的doc_path", 
+                key=config_uploader_key
+            )
+            # 如果有文件上传，则处理并立即增加counter以清空上传缓存
+            if uploaded_config_files:
+                apply_file_list_update(uploaded_config_files)
+                st.session_state.ui_update_counter += 1
+                st.rerun()
         else:
-            uploaded_files = st.file_uploader("选择或拖拽文件到这里", accept_multiple_files=True, type=["pdf", "docx", "txt", "md", "csv", "json"], help="支持多种文件格式", key="regular_file_uploader")
-            apply_file_list_update(uploaded_files, is_config_mode=False)
+            # 使用ui_update_counter作为key的一部分，以确保每次更新时重新创建file_uploader
+            regular_uploader_key = f"regular_file_uploader_{st.session_state.ui_update_counter}"
+            uploaded_files = st.file_uploader(
+                "选择或拖拽文件到这里", 
+                accept_multiple_files=True, 
+                type=["pdf", "docx", "txt", "md", "csv", "json"], 
+                help="支持多种文件格式", 
+                key=regular_uploader_key
+            )
+            # 如果有文件上传，则处理并立即增加counter以清空上传缓存
+            if uploaded_files:
+                apply_file_list_update(uploaded_files)
+                st.session_state.ui_update_counter += 1
+                st.rerun()
 
         if st.session_state.temp_files:
             st.markdown('<div id="file_list_anchor"></div>', unsafe_allow_html=True)
@@ -366,7 +367,8 @@ with st.container():
             # 使用唯一的key以避免在状态变化时过度重新渲染
             @st.cache_data
             def get_key():
-                return f"file_editor_{st.session_state.ui_update_counter+1}"
+                st.session_state.ui_update_counter += 1
+                return f"file_editor_{st.session_state.ui_update_counter}"
             edited_df = st.data_editor(
                 df,
                 column_config={
@@ -389,6 +391,7 @@ with st.container():
                     toggle_file_selection(file_name, is_selected)
                     # 确保UI更新，但在勾选多个时可能会导致重新渲染
                     st.rerun()
+                    # st.session_state.ui_update_counter += 1
         
         col1_1, col1_2, col1_3 = st.columns([1, 1, 2])
         with col1_1:
@@ -431,18 +434,7 @@ with col2:
     col2_title, col2_button = st.columns([5, 1])
     with col2_title:
         st.subheader("🧠 知识库状态")
-    if "refreshing_status" not in st.session_state:
-        st.session_state.refreshing_status = False
-    if "refresh_success_time" not in st.session_state:
-        st.session_state.refresh_success_time = None
-    if "refresh_start_time" not in st.session_state:
-        st.session_state.refresh_start_time = None
-    current_time = datetime.datetime.now()
-    if (st.session_state.refreshing_status and 
-        st.session_state.refresh_start_time is not None and 
-        (current_time - st.session_state.refresh_start_time).total_seconds() > 10):
-        st.session_state.refreshing_status = False
-        st.session_state.refresh_start_time = None
+    
     with col2_button:
         st.markdown("""
         <style>
@@ -462,54 +454,25 @@ with col2:
         }
         </style>
         """, unsafe_allow_html=True)
+        
         refresh_button = st.button(
-            "🔄" if not st.session_state.refreshing_status else "⏳", 
+            "🔄", 
             help="刷新知识库状态", 
             key="refresh_kb_status", 
-            disabled=st.session_state.refreshing_status,
-            type="primary" if not st.session_state.refreshing_status else "secondary"
+            type="primary"
         )
+        
         if refresh_button:
-            st.session_state.refreshing_status = True
-            st.session_state.refresh_start_time = datetime.datetime.now()
-            if "milvus_status" in st.session_state:
-                st.session_state["milvus_status"] = None
+            # 直接清除状态并刷新
+            st.session_state.milvus_status = None
             st.session_state.ui_update_counter += 1
 
-    refresh_status_container = st.empty()
-    if st.session_state.refreshing_status:
-        with refresh_status_container.container():
-            st.markdown("""
-            <div style="background-color: #e8f4fa; padding: 10px; border-radius: 8px; 
-                border-left: 3px solid #2e86de; display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="display: inline-block; margin-right: 10px;">⏳</div>
-                <div style="display: inline-block;">正在刷新知识库状态...</div>
-            </div>
-            """, unsafe_allow_html=True)
-    if (st.session_state.refresh_success_time is not None and 
-        (current_time - st.session_state.refresh_success_time).total_seconds() < 3):
-        with refresh_status_container.container():
-            st.markdown("""
-            <div style="background-color: #e3f9e5; padding: 10px; border-radius: 8px; 
-                border-left: 3px solid #27ae60; display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="display: inline-block; margin-right: 10px;">✅</div>
-                <div style="display: inline-block;">刷新完成!</div>
-            </div>
-            """, unsafe_allow_html=True)
-    elif st.session_state.refresh_success_time is not None:
-        st.session_state.refresh_success_time = None
-        refresh_status_container.empty()
-
     try:
-        if "milvus_status" not in st.session_state or st.session_state["milvus_status"] is None:
-            st.session_state["milvus_status"] = flash_rag.get_milvus_status()
-            if st.session_state.refreshing_status:
-                st.session_state.refreshing_status = False
-                st.session_state.refresh_start_time = None
-                st.session_state.refresh_success_time = datetime.datetime.now()
-                st.session_state.ui_update_counter += 1
+        # 获取知识库状态
+        if st.session_state.milvus_status is None:
+            st.session_state.milvus_status = flash_rag.get_milvus_status()
         
-        milvus_status = st.session_state["milvus_status"]
+        milvus_status = st.session_state.milvus_status
         logger.info(f"milvus_status: {milvus_status}")
 
         st.markdown("""
@@ -520,69 +483,27 @@ with col2:
 
         if milvus_status and milvus_status.get("status") == "ok":
             try:
+                # 集合总数和总段落数并排放置
                 col2_1, col2_2 = st.columns(2)
                 with col2_1:
                     st.metric("集合总数", milvus_status.get("collection_count", 0))
-                    st.metric("总段落数", milvus_status.get("total_entities", 0), delta_color="normal")
                 with col2_2:
-                    collections_info = milvus_status.get("collections_info", [])
-                    index_status = "未建立"
-                    if collections_info:
-                        try:
-                            index_statuses = [info.get("index_status", "未知") for info in collections_info]
-                            valid_statuses = [status for status in index_statuses if status != "获取失败" and status != "未知"]
-                            if valid_statuses:
-                                if all(status == "已建立" for status in valid_statuses):
-                                    index_status = "已全部建立"
-                                elif any(status == "已建立" for status in valid_statuses):
-                                    index_status = "部分已建立"
-                        except Exception as e:
-                            logger.warning(f"处理索引状态时出错: {str(e)}")
-                    st.metric("索引状态", index_status)
-
-                    last_update = "无"
-                    if collections_info:
-                        try:
-                            update_times = []
-                            for info in collections_info:
-                                if info.get("last_update") and info.get("last_update") != "未知":
-                                    update_times.append(info.get("last_update"))
-                                elif info.get("create_time") and info.get("create_time") != "未知":
-                                    update_times.append(info.get("create_time"))
-                            if update_times:
-                                last_update = max(update_times)
-                        except Exception as e:
-                            logger.warning(f"处理更新时间时出错: {str(e)}")
-                    st.metric("最近更新", last_update)
-
+                    st.metric("总段落数", milvus_status.get("total_entities", 0), delta_color="normal")
+                
+                collections_info = milvus_status.get("collections_info", [])
                 if collections_info:
                     with st.expander("📊 查看详细集合信息", expanded=False):
                         try:
                             df = pd.DataFrame(collections_info)
                             if not df.empty:
-                                available_columns = ["name", "row_count", "index_status", "create_time"]
-                                display_columns = ["集合名称", "段落数量", "索引状态", "创建时间"]
-                                if "last_update" in df.columns:
-                                    available_columns.append("last_update")
-                                    display_columns.append("最近更新")
+                                # 只保留集合名称和段落数量
+                                available_columns = ["name", "row_count"]
+                                display_columns = ["集合名称", "段落数量"]
                                 existing_columns = [col for col in available_columns if col in df.columns]
                                 df = df[existing_columns]
                                 column_mapping = {k: v for k, v in zip(available_columns, display_columns) if k in existing_columns}
                                 df = df.rename(columns=column_mapping)
-                                def color_index_status(val):
-                                    if val == "已建立":
-                                        return "color: green"
-                                    elif val == "未建立":
-                                        return "color: red"
-                                    else:
-                                        return "color: gray"
-                                if "索引状态" in df.columns:
-                                    st.dataframe(
-                                        df.style.applymap(color_index_status, subset=["索引状态"]),
-                                        use_container_width=True
-                                    )
-                                else:
-                                    st.dataframe(df, use_container_width=True)
+                                st.dataframe(df, use_container_width=True)
                             else:
                                 st.info("暂无集合详细信息")
                         except Exception as e:
@@ -596,14 +517,13 @@ with col2:
             try:
                 stats = {
                     "集合总数": "0",
-                    "总段落数": "0",
-                    "索引状态": "未建立",
-                    "最近更新": "无"
+                    "总段落数": "0"
                 }
                 col2_1, col2_2 = st.columns(2)
-                for i, (key, value) in enumerate(stats.items()):
-                    with col2_1 if i < 2 else col2_2:
-                        st.metric(key, value)
+                with col2_1:
+                    st.metric("集合总数", stats["集合总数"])
+                with col2_2:
+                    st.metric("总段落数", stats["总段落数"])
             except Exception as e:
                 st.error(f"显示默认状态时出错: {str(e)}")
     except Exception as overall_err:

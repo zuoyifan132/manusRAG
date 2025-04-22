@@ -25,7 +25,7 @@
       "type": "milvus",
       "params": {
         "batch_size_limit": 32,
-        "collection_name": "test_service_collection_20150416"    
+        "collection_name": "test_collection_20250422_3"    
       }
     }
   ],

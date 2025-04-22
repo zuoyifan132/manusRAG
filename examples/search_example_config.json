@@ -4,7 +4,7 @@
       "type": "milvus",
       "params":{
         "top_k": 100,
-        "collection_name": "test_service_collection_20150416"
+        "collection_name": "test_collection_20250422_3"
       }
     }
   ],

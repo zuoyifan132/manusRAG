@@ -5,7 +5,6 @@
 @Desc   : None
 """
 
-import os
 import sys
 sys.path.append("..")
 

@@ -11,3 +11,5 @@ allowed_ips = [
 RERANKER_API_URL = "http://127.0.0.1:12212/rerank"
 EMBEDDING_API_URL = "http://127.0.0.1:12212/bge_m3_embedding"
 MINERU_API_URL = "http://127.0.0.1:8888/file_parse"
+OPENAI_API_KEY = ""
+
