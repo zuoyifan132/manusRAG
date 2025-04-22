@@ -104,6 +104,8 @@ def process_query(query):
         st.session_state.rag_processing_query = True
         st.session_state.rag_messages.append({"role": "user", "content": query})
         st.session_state.ui_update_counter += 1
+        # 添加rerun调用来强制刷新页面，立即处理查询
+        st.rerun()
 
 # 实际处理文件列表
 @st.cache_resource
@@ -612,6 +614,7 @@ with col2:
 st.markdown("---")
 with st.container():
     st.subheader("🔎 问题查询")
+    
     use_search_config = st.checkbox(
         "使用搜索配置文件", 
         value=False, 
@@ -694,7 +697,25 @@ with st.container():
                             for i, result in enumerate(results_for_doc[:2]):
                                 context += f"{result['内容']}\n\n"
                         try:
-                            for token in flash_rag.aigc_answer(user_query, context, config=search_config_path):
+                            # 获取当前会话的对话历史
+                            chat_history = []
+                            if len(st.session_state.rag_messages) > 1:
+                                # 获取历史消息（除了最后一条用户问题）
+                                history_messages = st.session_state.rag_messages[:-1]
+                                
+                                # 限制历史对话的长度，保留最近的5轮对话（10条消息）
+                                if len(history_messages) > 10:
+                                    history_messages = history_messages[-10:]
+                                
+                                chat_history = history_messages
+                            
+                            # 使用带历史的回答函数
+                            for token in flash_rag.aigc_answer_with_history(
+                                user_query, 
+                                context, 
+                                history=chat_history,
+                                config=search_config_path
+                            ):
                                 response += token
                                 message_placeholder.code(response + "▌", language=None)
                             message_placeholder.code(response, language=None)

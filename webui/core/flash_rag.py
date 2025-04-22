@@ -285,3 +285,67 @@ def aigc_answer(query: str, context: str, config: str = None, stream=True):
     
     # 返回生成器
     return token_generator
+
+
+def aigc_answer_with_history(query: str, context: str, history=None, config: str = None, stream=True):
+    """
+    使用AIGC模型生成回答，支持多轮对话的上下文
+    
+    Args:
+        query (str): 当前用户查询
+        context (str): 检索到的相关上下文
+        history (list): 对话历史，格式为 [{"role": "user", "content": "用户消息"}, {"role": "assistant", "content": "助手回复"}]
+        config (str): 配置文件路径
+        stream (bool): 是否使用流式生成
+    
+    Returns:
+        生成器，每次yield一个token
+    """
+    # 构造系统提示词
+    system_prompt = (
+        f"(根据以下检索到的相关信息，生成简洁且准确的回答：\n"
+        f"请以专业且清晰的语言回答，突出关键点，不加入额外内容。)"
+        f"请注意回答要换行，注意排版"
+        f"请注意所给的信息是结构化的数据"
+    )
+    
+    # 配置参数
+    model = "gpt-4o-mini"  # 默认模型
+    temperature = 0.0      # 默认温度
+    
+    # 如果有配置文件，加载配置
+    if config:
+        try:
+            with open(config, "r") as f:
+                config_data = json.load(f)
+                if "aigc" in config_data:
+                    aigc_config = config_data["aigc"]
+                    if "model" in aigc_config:
+                        model = aigc_config["model"]
+                    if "temperature" in aigc_config:
+                        temperature = float(aigc_config["temperature"])
+        except Exception as e:
+            logger.warning(f"读取AIGC配置失败: {str(e)}")
+    
+    # 创建消息列表
+    messages = []
+    
+    # 添加系统消息
+    messages.append({"role": "system", "content": system_prompt})
+    
+    # 添加历史对话
+    if history and len(history) > 0:
+        messages.extend(history)
+    
+    # 添加当前用户提问和上下文
+    messages.append({"role": "user", "content": f"以下是相关信息：\n{context}\n\n我的问题是：{query}"})
+    
+    logger.info(f"messages: {messages}")
+
+    # 使用OpenAI API生成回答 - 确保以关键字参数形式传递所有参数
+    return openai_stream_generate(
+        messages=messages,
+        model=model,
+        temperature=temperature,
+        stream=stream
+    )
