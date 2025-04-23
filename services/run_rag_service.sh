@@ -11,7 +11,8 @@ echo "工作进程数: $WORKERS"
 echo "日志文件: $LOG_FILE"
 
 # 启动服务
-nohup uvicorn app:app --host 0.0.0.0 --port $PORT --workers $WORKERS > $LOG_FILE 2>&1 &
+# nohup uvicorn app:app --host 0.0.0.0 --port $PORT --workers $WORKERS > $LOG_FILE 2>&1 &
+nohup python -m uvicorn app:app --host 0.0.0.0 --port $PORT --workers $WORKERS > $LOG_FILE 2>&1 &
 
 # 显示启动结果
 echo "服务已在后台启动，PID: $!"

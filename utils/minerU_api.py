@@ -17,7 +17,7 @@ from parser.config import REQUEST_TIMEOUT, MAX_RETRIES
 from services.config import MINERU_API_URL
 
 
-@retry(stop=stop_after_attempt(MAX_RETRIES), wait=wait_exponential(multiplier=1, min=4, max=10))
+# @retry(stop=stop_after_attempt(MAX_RETRIES), wait=wait_exponential(multiplier=1, min=4, max=10))
 def mineru_file_parse_api(file_path: str) -> Optional[Dict]:
     """
     调用MinerU文件解析API解析PDF文件
@@ -65,7 +65,7 @@ def mineru_file_parse_api(file_path: str) -> Optional[Dict]:
 
 if __name__ == "__main__":
     # 测试代码
-    test_file_path = "../test/dummy_file/2503.14476v1.pdf"
+    test_file_path = "../test/dummy_file/rag_and_broswer_use.pdf"
     result = mineru_file_parse_api(file_path=test_file_path)
     if result:
         print(f"API调用成功，返回结果:\n{json.dumps(result, indent=2, ensure_ascii=False)}")

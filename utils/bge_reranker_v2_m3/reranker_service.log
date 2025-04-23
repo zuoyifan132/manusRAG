@@ -1,13 +1,20 @@
-2025-04-22 17:52:52.089 | INFO     | __main__:<module>:19 - Loading BGE-Reranker-v2-m3 model...
-2025-04-22 17:52:56.593 | INFO     | __main__:<module>:24 - Model loaded successfully.
-2025-04-22 17:52:56.603 | INFO     | __main__:<module>:84 - Starting FastAPI service on 0.0.0.0:12212...
-INFO:     Started server process [23088]
+2025-04-23 14:14:14.279 | INFO     | __main__:<module>:19 - Loading BGE-Reranker-v2-m3 model...
+2025-04-23 14:14:18.587 | INFO     | __main__:<module>:24 - Model loaded successfully.
+2025-04-23 14:14:18.595 | INFO     | __main__:<module>:84 - Starting FastAPI service on 0.0.0.0:12212...
+INFO:     Started server process [39665]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:12212 (Press CTRL+C to quit)
-2025-04-22 17:54:19.130 | INFO     | __main__:rerank:57 - Computing scores...
-2025-04-22 17:54:26.420 | INFO     | __main__:rerank:59 - Scores computed successfully.
-INFO:     127.0.0.1:51961 - "POST /rerank HTTP/1.1" 200 OK
-2025-04-22 17:55:51.523 | INFO     | __main__:rerank:57 - Computing scores...
-2025-04-22 17:55:56.753 | INFO     | __main__:rerank:59 - Scores computed successfully.
-INFO:     127.0.0.1:52080 - "POST /rerank HTTP/1.1" 200 OK
+2025-04-23 14:31:18.652 | INFO     | __main__:rerank:57 - Computing scores...
+2025-04-23 14:31:24.495 | INFO     | __main__:rerank:59 - Scores computed successfully.
+INFO:     127.0.0.1:53471 - "POST /rerank HTTP/1.1" 200 OK
+2025-04-23 14:32:04.582 | INFO     | __main__:rerank:57 - Computing scores...
+2025-04-23 14:32:10.003 | INFO     | __main__:rerank:59 - Scores computed successfully.
+INFO:     127.0.0.1:53521 - "POST /rerank HTTP/1.1" 200 OK
+2025-04-23 14:42:44.894 | INFO     | __main__:rerank:57 - Computing scores...
+2025-04-23 14:42:51.223 | INFO     | __main__:rerank:59 - Scores computed successfully.
+INFO:     127.0.0.1:54300 - "POST /rerank HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [39665]

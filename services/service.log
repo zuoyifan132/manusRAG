@@ -1,0 +1,256 @@
+INFO:     Started server process [39761]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:17724 (Press CTRL+C to quit)
+2025-04-23 14:18:26.573 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: 啥是RAG以及与openmanus有什么区别 ---
+2025-04-23 14:18:26.573 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: 啥是RAG以及与openmanus有什么区别 ===
+Open /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db failed, the file has been opened by another program
+2025-04-23 14:18:26,613 [ERROR][_create_connection]: Failed to create new connection using: d6a0d72d8b0c4572b0bc88e598f39d7e (milvus_client.py:923)
+2025-04-23 14:18:26.613 | ERROR    | services.pipeline:retrieval:213 - 从 milvus 检索时错误: <ConnectionConfigException: (code=1, message=Open local milvus failed)>
+2025-04-23 14:18:26.613 | WARNING  | services.pipeline:run_pipeline:333 - --- 检索失败，终止流程... ---
+INFO:     127.0.0.1:52725 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:18:43.603 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: 啥是RAG以及与openmanus有什么区别 ---
+2025-04-23 14:18:43.603 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: 啥是RAG以及与openmanus有什么区别 ===
+2025-04-23 14:18:44.135 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:18:44.654 | INFO     | database.milvus.milvusManager:_create_collection:138 - Successfully created an index for the 'vector' field in collection test_collection
+2025-04-23 14:18:44.655 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:18:50.840 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 0 条结果
+2025-04-23 14:18:50.840 | WARNING  | services.pipeline:run_pipeline:333 - --- 检索失败，终止流程... ---
+INFO:     127.0.0.1:52745 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:36.127 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:36.127 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/c31a14d7-99d3-479d-82ef-29424ffc3f7d_20250306_AInews.md
+2025-04-23 14:20:36.128 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1188
+2025-04-23 14:20:36.128 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:36.128 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:36.128 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共8块
+2025-04-23 14:20:36.128 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:36.133 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:36.134 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:20:37.700 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 8 records into collection test_collection
+2025-04-23 14:20:37.700 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 8 text chunks into database.', 'ingest_return': '[{"insert_count": 8, "ids": [457543316322648064, 457543316322648065, 457543316322648066, 457543316322648067, 457543316322648068, 457543316322648069, 457543316322648070, 457543316322648071], "cost": 0}]', 'time_taken': 1.565579891204834}
+2025-04-23 14:20:37.700 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52856 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:37.704 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:37.704 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/e9764898-1e75-4662-8eff-8d9562967e66_20250307_AI_news.md
+2025-04-23 14:20:37.704 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1307
+2025-04-23 14:20:37.704 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:37.704 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:37.705 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共11块
+2025-04-23 14:20:37.705 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:37.706 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:37.707 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:20:38.917 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 11 records into collection test_collection
+2025-04-23 14:20:38.918 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 11 text chunks into database.', 'ingest_return': '[{"insert_count": 11, "ids": [457543316645085200, 457543316645085201, 457543316645085202, 457543316645085203, 457543316645085204, 457543316645085205, 457543316645085206, 457543316645085207, 457543316645085208, 457543316645085209, 457543316645085210], "cost": 0}]', 'time_taken': 1.210888385772705}
+2025-04-23 14:20:38.918 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52864 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:38.926 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:38.927 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/61171391-202d-417b-84a7-5bee459eeaaf_Crawl4LLM调研.md
+2025-04-23 14:20:38.927 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 3965
+2025-04-23 14:20:38.927 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:38.927 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:38.928 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共27块
+2025-04-23 14:20:38.928 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:38.931 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:38.932 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:20:40.132 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 27 records into collection test_collection
+2025-04-23 14:20:40.132 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 27 text chunks into database.', 'ingest_return': '[{"insert_count": 27, "ids": [457543316964114470, 457543316964114471, 457543316964114472, 457543316964114473, 457543316964114474, 457543316964114475, 457543316964114476, 457543316964114477, 457543316964114478, 457543316964114479, 457543316964114480, 457543316964114481, 457543316964114482, 457543316964114483, 457543316964114484, 457543316964114485, 457543316964114486, 457543316964114487, 457543316964114488, 457543316964114489, 457543316964114490, 457543316964114491, 457543316964114492, 457543316964114493, 457543316964114494, 457543316964114495, 457543316964114496], "cost": 0}]', 'time_taken': 1.2006871700286865}
+2025-04-23 14:20:40.133 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52873 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:40.144 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:40.144 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/3c1ff6b6-379d-48aa-90d2-13447dd7389f_DeepSeek-R1 与 Agents 框架结合效率分析.md
+2025-04-23 14:20:40.145 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 4203
+2025-04-23 14:20:40.145 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:40.145 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:40.146 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共29块
+2025-04-23 14:20:40.146 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:40.149 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:40.152 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:20:41.154 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 29 records into collection test_collection
+2025-04-23 14:20:41.154 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 29 text chunks into database.', 'ingest_return': '[{"insert_count": 29, "ids": [457543317232549980, 457543317232549981, 457543317232549982, 457543317232549983, 457543317232549984, 457543317232549985, 457543317232549986, 457543317232549987, 457543317232549988, 457543317232549989, 457543317232549990, 457543317232549991, 457543317232549992, 457543317232549993, 457543317232549994, 457543317232549995, 457543317232549996, 457543317232549997, 457543317232549998, 457543317232549999, 457543317232550000, 457543317232550001, 457543317232550002, 457543317232550003, 457543317232550004, 457543317232550005, 457543317232550006, 457543317232550007, 457543317232550008], "cost": 0}]', 'time_taken': 1.0015759468078613}
+2025-04-23 14:20:41.154 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52877 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:41.158 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:41.158 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/bdcfef0c-8458-4feb-8434-df833514de22_FlashC_agents_concurrent_tool_calls.md
+2025-04-23 14:20:41.158 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 7137
+2025-04-23 14:20:41.158 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:41.158 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:41.159 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共48块
+2025-04-23 14:20:41.159 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:41.172 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:41.174 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1745389241.180943 12309558 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
+Ingesting batch data into Milvus:   0%|          | 0/2 [00:00<?, ?it/s]2025-04-23 14:20:42.361 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  50%|█████     | 1/2 [00:01<00:01,  1.17s/it]2025-04-23 14:20:43.597 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 16 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.21s/it]Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.20s/it]
+2025-04-23 14:20:43.598 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 48 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543317548171414, 457543317548171415, 457543317548171416, 457543317548171417, 457543317548171418, 457543317548171419, 457543317548171420, 457543317548171421, 457543317548171422, 457543317548171423, 457543317548171424, 457543317548171425, 457543317548171426, 457543317548171427, 457543317548171428, 457543317548171429, 457543317548171430, 457543317548171431, 457543317548171432, 457543317548171433, 457543317548171434, 457543317548171435, 457543317548171436, 457543317548171437, 457543317548171438, 457543317548171439, 457543317548171440, 457543317548171441, 457543317548171442, 457543317548171443, 457543317548171444, 457543317548171445], "cost": 0}, {"insert_count": 16, "ids": [457543317872443606, 457543317872443607, 457543317872443608, 457543317872443609, 457543317872443610, 457543317872443611, 457543317872443612, 457543317872443613, 457543317872443614, 457543317872443615, 457543317872443616, 457543317872443617, 457543317872443618, 457543317872443619, 457543317872443620, 457543317872443621], "cost": 0}]', 'time_taken': 2.421638011932373}
+2025-04-23 14:20:43.598 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52880 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:43.605 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:43.605 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/5c388bc5-c1ff-4efa-abd1-cc7f427644d5_MCP调研报告.md
+2025-04-23 14:20:43.606 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1444
+2025-04-23 14:20:43.606 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:43.606 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:43.606 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共9块
+2025-04-23 14:20:43.607 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:43.609 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:43.610 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:20:44.765 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 9 records into collection test_collection
+2025-04-23 14:20:44.766 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 9 text chunks into database.', 'ingest_return': '[{"insert_count": 9, "ids": [457543318178889974, 457543318178889975, 457543318178889976, 457543318178889977, 457543318178889978, 457543318178889979, 457543318178889980, 457543318178889981, 457543318178889982], "cost": 0}]', 'time_taken': 1.1556000709533691}
+2025-04-23 14:20:44.766 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52892 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:44.773 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:44.773 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/34c8973b-f185-4114-8e65-780f7faf1f80_milvus高阶用法.md
+2025-04-23 14:20:44.774 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 11331
+2025-04-23 14:20:44.774 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:44.774 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:44.776 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共82块
+2025-04-23 14:20:44.776 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:44.779 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:44.780 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+Ingesting batch data into Milvus:   0%|          | 0/3 [00:00<?, ?it/s]2025-04-23 14:20:46.170 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  33%|███▎      | 1/3 [00:01<00:02,  1.39s/it]2025-04-23 14:20:47.468 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  67%|██████▋   | 2/3 [00:02<00:01,  1.34s/it]2025-04-23 14:20:48.314 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 18 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:03<00:00,  1.11s/it]Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:03<00:00,  1.18s/it]
+2025-04-23 14:20:48.315 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 82 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543318547726600, 457543318547726601, 457543318547726602, 457543318547726603, 457543318547726604, 457543318547726605, 457543318547726606, 457543318547726607, 457543318547726608, 457543318547726609, 457543318547726610, 457543318547726611, 457543318547726612, 457543318547726613, 457543318547726614, 457543318547726615, 457543318547726616, 457543318547726617, 457543318547726618, 457543318547726619, 457543318547726620, 457543318547726621, 457543318547726622, 457543318547726623, 457543318547726624, 457543318547726625, 457543318547726626, 457543318547726627, 457543318547726628, 457543318547726629, 457543318547726630, 457543318547726631], "cost": 0}, {"insert_count": 32, "ids": [457543318887203144, 457543318887203145, 457543318887203146, 457543318887203147, 457543318887203148, 457543318887203149, 457543318887203150, 457543318887203151, 457543318887203152, 457543318887203153, 457543318887203154, 457543318887203155, 457543318887203156, 457543318887203157, 457543318887203158, 457543318887203159, 457543318887203160, 457543318887203161, 457543318887203162, 457543318887203163, 457543318887203164, 457543318887203165, 457543318887203166, 457543318887203167, 457543318887203168, 457543318887203169, 457543318887203170, 457543318887203171, 457543318887203172, 457543318887203173, 457543318887203174, 457543318887203175], "cost": 0}, {"insert_count": 18, "ids": [457543319109763464, 457543319109763465, 457543319109763466, 457543319109763467, 457543319109763468, 457543319109763469, 457543319109763470, 457543319109763471, 457543319109763472, 457543319109763473, 457543319109763474, 457543319109763475, 457543319109763476, 457543319109763477, 457543319109763478, 457543319109763479, 457543319109763480, 457543319109763481], "cost": 0}]', 'time_taken': 3.5347299575805664}
+2025-04-23 14:20:48.315 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52897 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:48.318 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:48.318 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/c00155f0-ddd3-43c5-ac65-bf2b96c6a265_OpenManus_report_v2.md
+2025-04-23 14:20:48.318 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 20466
+2025-04-23 14:20:48.318 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:48.318 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:48.319 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共150块
+2025-04-23 14:20:48.319 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:48.334 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:48.336 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+Ingesting batch data into Milvus:   0%|          | 0/5 [00:00<?, ?it/s]2025-04-23 14:20:49.720 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  20%|██        | 1/5 [00:01<00:05,  1.38s/it]2025-04-23 14:20:50.728 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  40%|████      | 2/5 [00:02<00:03,  1.16s/it]2025-04-23 14:20:52.047 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  60%|██████    | 3/5 [00:03<00:02,  1.23s/it]2025-04-23 14:20:54.220 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  80%|████████  | 4/5 [00:05<00:01,  1.60s/it]2025-04-23 14:20:55.387 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 22 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 5/5 [00:07<00:00,  1.45s/it]Ingesting batch data into Milvus: 100%|██████████| 5/5 [00:07<00:00,  1.41s/it]
+2025-04-23 14:20:55.388 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 150 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543319478337964, 457543319478337965, 457543319478337966, 457543319478337967, 457543319478337968, 457543319478337969, 457543319478337970, 457543319478337971, 457543319478337972, 457543319478337973, 457543319478337974, 457543319478337975, 457543319478337976, 457543319478337977, 457543319478337978, 457543319478337979, 457543319478337980, 457543319478337981, 457543319478337982, 457543319478337983, 457543319478337984, 457543319478337985, 457543319478337986, 457543319478337987, 457543319478337988, 457543319478337989, 457543319478337990, 457543319478337991, 457543319478337992, 457543319478337993, 457543319478337994, 457543319478337995], "cost": 0}, {"insert_count": 32, "ids": [457543319742054892, 457543319742054893, 457543319742054894, 457543319742054895, 457543319742054896, 457543319742054897, 457543319742054898, 457543319742054899, 457543319742054900, 457543319742054901, 457543319742054902, 457543319742054903, 457543319742054904, 457543319742054905, 457543319742054906, 457543319742054907, 457543319742054908, 457543319742054909, 457543319742054910, 457543319742054911, 457543319742054912, 457543319742054913, 457543319742054914, 457543319742054915, 457543319742054916, 457543319742054917, 457543319742054918, 457543319742054919, 457543319742054920, 457543319742054921, 457543319742054922, 457543319742054923], "cost": 0}, {"insert_count": 32, "ids": [457543320087560748, 457543320087560749, 457543320087560750, 457543320087560751, 457543320087560752, 457543320087560753, 457543320087560754, 457543320087560755, 457543320087560756, 457543320087560757, 457543320087560758, 457543320087560759, 457543320087560760, 457543320087560761, 457543320087560762, 457543320087560763, 457543320087560764, 457543320087560765, 457543320087560766, 457543320087560767, 457543320087560768, 457543320087560769, 457543320087560770, 457543320087560771, 457543320087560772, 457543320087560773, 457543320087560774, 457543320087560775, 457543320087560776, 457543320087560777, 457543320087560778, 457543320087560779], "cost": 0}, {"insert_count": 32, "ids": [457543320657199724, 457543320657199725, 457543320657199726, 457543320657199727, 457543320657199728, 457543320657199729, 457543320657199730, 457543320657199731, 457543320657199732, 457543320657199733, 457543320657199734, 457543320657199735, 457543320657199736, 457543320657199737, 457543320657199738, 457543320657199739, 457543320657199740, 457543320657199741, 457543320657199742, 457543320657199743, 457543320657199744, 457543320657199745, 457543320657199746, 457543320657199747, 457543320657199748, 457543320657199749, 457543320657199750, 457543320657199751, 457543320657199752, 457543320657199753, 457543320657199754, 457543320657199755], "cost": 0}, {"insert_count": 22, "ids": [457543320963383980, 457543320963383981, 457543320963383982, 457543320963383983, 457543320963383984, 457543320963383985, 457543320963383986, 457543320963383987, 457543320963383988, 457543320963383989, 457543320963383990, 457543320963383991, 457543320963383992, 457543320963383993, 457543320963383994, 457543320963383995, 457543320963383996, 457543320963383997, 457543320963383998, 457543320963383999, 457543320963384000, 457543320963384001], "cost": 0}]', 'time_taken': 7.050811052322388}
+2025-04-23 14:20:55.388 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52919 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:55.392 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:55.393 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/2d6c1be1-f70d-4c05-a830-f1f6c1ee6815_pdf-to-podcast.md
+2025-04-23 14:20:55.394 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 6822
+2025-04-23 14:20:55.394 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:20:55.394 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:20:55.394 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共47块
+2025-04-23 14:20:55.394 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:20:55.396 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:20:55.398 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+Ingesting batch data into Milvus:   0%|          | 0/2 [00:00<?, ?it/s]2025-04-23 14:20:56.792 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  50%|█████     | 1/2 [00:01<00:01,  1.39s/it]2025-04-23 14:20:57.686 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 15 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.10s/it]Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.14s/it]
+2025-04-23 14:20:57.687 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 47 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543321331434200, 457543321331434201, 457543321331434202, 457543321331434203, 457543321331434204, 457543321331434205, 457543321331434206, 457543321331434207, 457543321331434208, 457543321331434209, 457543321331434210, 457543321331434211, 457543321331434212, 457543321331434213, 457543321331434214, 457543321331434215, 457543321331434216, 457543321331434217, 457543321331434218, 457543321331434219, 457543321331434220, 457543321331434221, 457543321331434222, 457543321331434223, 457543321331434224, 457543321331434225, 457543321331434226, 457543321331434227, 457543321331434228, 457543321331434229, 457543321331434230, 457543321331434231], "cost": 0}, {"insert_count": 15, "ids": [457543321566053144, 457543321566053145, 457543321566053146, 457543321566053147, 457543321566053148, 457543321566053149, 457543321566053150, 457543321566053151, 457543321566053152, 457543321566053153, 457543321566053154, 457543321566053155, 457543321566053156, 457543321566053157, 457543321566053158], "cost": 0}]', 'time_taken': 2.289276123046875}
+2025-04-23 14:20:57.687 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52941 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:20:57.694 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:20:57.694 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/f9caaebf-461e-41d0-a395-35e7ab641009_rag_and_broswer_use.pdf
+2025-04-23 14:22:20.093 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 8055
+2025-04-23 14:22:20.093 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:22:20.094 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:22:20.097 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共53块
+2025-04-23 14:22:20.097 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:22:20.120 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:22:20.121 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+Ingesting batch data into Milvus:   0%|          | 0/2 [00:00<?, ?it/s]2025-04-23 14:22:21.226 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  50%|█████     | 1/2 [00:01<00:01,  1.11s/it]2025-04-23 14:22:22.233 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 21 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.05s/it]Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.06s/it]
+2025-04-23 14:22:22.234 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 53 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543343465562934, 457543343465562935, 457543343465562936, 457543343465562937, 457543343465562938, 457543343465562939, 457543343465562940, 457543343465562941, 457543343465562942, 457543343465562943, 457543343465562944, 457543343465562945, 457543343465562946, 457543343465562947, 457543343465562948, 457543343465562949, 457543343465562950, 457543343465562951, 457543343465562952, 457543343465562953, 457543343465562954, 457543343465562955, 457543343465562956, 457543343465562957, 457543343465562958, 457543343465562959, 457543343465562960, 457543343465562961, 457543343465562962, 457543343465562963, 457543343465562964, 457543343465562965], "cost": 0}, {"insert_count": 21, "ids": [457543343729279862, 457543343729279863, 457543343729279864, 457543343729279865, 457543343729279866, 457543343729279867, 457543343729279868, 457543343729279869, 457543343729279870, 457543343729279871, 457543343729279872, 457543343729279873, 457543343729279874, 457543343729279875, 457543343729279876, 457543343729279877, 457543343729279878, 457543343729279879, 457543343729279880, 457543343729279881, 457543343729279882], "cost": 0}]', 'time_taken': 2.112987756729126}
+2025-04-23 14:22:22.234 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:52950 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:22:22.254 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:22:22.254 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/6424dec1-0fbb-4306-a00c-aaf5f5584fb0_传统RAG搜索与broswer_use搜索比较.md
+2025-04-23 14:22:22.255 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 11364
+2025-04-23 14:22:22.255 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:22:22.255 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:22:22.257 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共71块
+2025-04-23 14:22:22.257 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:22:22.259 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:22:22.260 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+Ingesting batch data into Milvus:   0%|          | 0/3 [00:00<?, ?it/s]2025-04-23 14:22:23.327 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  33%|███▎      | 1/3 [00:01<00:02,  1.07s/it]2025-04-23 14:22:24.503 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection
+Ingesting batch data into Milvus:  67%|██████▋   | 2/3 [00:02<00:01,  1.13s/it]2025-04-23 14:22:25.364 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 7 records into collection test_collection
+Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:03<00:00,  1.01s/it]Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:03<00:00,  1.03s/it]
+2025-04-23 14:22:25.364 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 71 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543344016589728, 457543344016589729, 457543344016589730, 457543344016589731, 457543344016589732, 457543344016589733, 457543344016589734, 457543344016589735, 457543344016589736, 457543344016589737, 457543344016589738, 457543344016589739, 457543344016589740, 457543344016589741, 457543344016589742, 457543344016589743, 457543344016589744, 457543344016589745, 457543344016589746, 457543344016589747, 457543344016589748, 457543344016589749, 457543344016589750, 457543344016589751, 457543344016589752, 457543344016589753, 457543344016589754, 457543344016589755, 457543344016589756, 457543344016589757, 457543344016589758, 457543344016589759], "cost": 0}, {"insert_count": 32, "ids": [457543344324346848, 457543344324346849, 457543344324346850, 457543344324346851, 457543344324346852, 457543344324346853, 457543344324346854, 457543344324346855, 457543344324346856, 457543344324346857, 457543344324346858, 457543344324346859, 457543344324346860, 457543344324346861, 457543344324346862, 457543344324346863, 457543344324346864, 457543344324346865, 457543344324346866, 457543344324346867, 457543344324346868, 457543344324346869, 457543344324346870, 457543344324346871, 457543344324346872, 457543344324346873, 457543344324346874, 457543344324346875, 457543344324346876, 457543344324346877, 457543344324346878, 457543344324346879], "cost": 0}, {"insert_count": 7, "ids": [457543344550839328, 457543344550839329, 457543344550839330, 457543344550839331, 457543344550839332, 457543344550839333, 457543344550839334], "cost": 0}]', 'time_taken': 3.1042959690093994}
+2025-04-23 14:22:25.364 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53012 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:22:25.367 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:22:25.367 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/200fc32c-77fe-4bfe-b665-66e1e5e16d70_技术调研报告：ElizaOS.md
+2025-04-23 14:22:25.367 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1467
+2025-04-23 14:22:25.367 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:22:25.367 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:22:25.368 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共11块
+2025-04-23 14:22:25.368 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:22:25.369 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:22:25.370 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:22:26.452 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 11 records into collection test_collection
+2025-04-23 14:22:26.453 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 11 text chunks into database.', 'ingest_return': '[{"insert_count": 11, "ids": [457543344835527726, 457543344835527727, 457543344835527728, 457543344835527729, 457543344835527730, 457543344835527731, 457543344835527732, 457543344835527733, 457543344835527734, 457543344835527735, 457543344835527736], "cost": 0}]', 'time_taken': 1.083113193511963}
+2025-04-23 14:22:26.453 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53029 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:31:17.576 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: 啥是RAG以及与openmanus有什么区别 ---
+2025-04-23 14:31:17.576 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: 啥是RAG以及与openmanus有什么区别 ===
+2025-04-23 14:31:17.600 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:31:17.601 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:31:18.644 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-23 14:31:18.645 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-23 14:31:24.498 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 5
+2025-04-23 14:31:24.498 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53468 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:32:04.010 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: deepseek-r1效果跟grok比咋样 ---
+2025-04-23 14:32:04.010 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: deepseek-r1效果跟grok比咋样 ===
+2025-04-23 14:32:04.013 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:32:04.014 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-23 14:32:04.576 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-23 14:32:04.576 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-23 14:32:10.004 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 5
+2025-04-23 14:32:10.004 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53512 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:41:05.205 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:41:05.206 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/ee599b83-f451-4294-b8e2-24b697ead63c_pdf-to-podcast.md
+2025-04-23 14:41:05.207 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 6822
+2025-04-23 14:41:05.207 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:41:05.207 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:41:05.209 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共47块
+2025-04-23 14:41:05.209 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:41:05.214 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:41:05.731 | INFO     | database.milvus.milvusManager:_create_collection:138 - Successfully created an index for the 'vector' field in collection test_collection_1
+2025-04-23 14:41:05.734 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection_1
+Ingesting batch data into Milvus:   0%|          | 0/2 [00:00<?, ?it/s]2025-04-23 14:41:07.546 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection_1
+Ingesting batch data into Milvus:  50%|█████     | 1/2 [00:01<00:01,  1.81s/it]2025-04-23 14:41:08.492 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 15 records into collection test_collection_1
+Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.30s/it]Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.38s/it]
+2025-04-23 14:41:08.492 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 47 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543638714680388, 457543638714680389, 457543638714680390, 457543638714680391, 457543638714680392, 457543638714680393, 457543638714680394, 457543638714680395, 457543638714680396, 457543638714680397, 457543638714680398, 457543638714680399, 457543638714680400, 457543638714680401, 457543638714680402, 457543638714680403, 457543638714680404, 457543638714680405, 457543638714680406, 457543638714680407, 457543638714680408, 457543638714680409, 457543638714680410, 457543638714680411, 457543638714680412, 457543638714680413, 457543638714680414, 457543638714680415, 457543638714680416, 457543638714680417, 457543638714680418, 457543638714680419], "cost": 0}, {"insert_count": 15, "ids": [457543638971319428, 457543638971319429, 457543638971319430, 457543638971319431, 457543638971319432, 457543638971319433, 457543638971319434, 457543638971319435, 457543638971319436, 457543638971319437, 457543638971319438, 457543638971319439, 457543638971319440, 457543638971319441, 457543638971319442], "cost": 0}]', 'time_taken': 2.758091926574707}
+2025-04-23 14:41:08.492 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54168 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:41:08.499 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-23 14:41:08.499 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/5e82ced0-501a-44fa-a767-ab082278942a_rag_and_broswer_use.pdf
+2025-04-23 14:42:22.196 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 8094
+2025-04-23 14:42:22.197 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-23 14:42:22.197 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-23 14:42:22.198 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共53块
+2025-04-23 14:42:22.198 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+2025-04-23 14:42:22.202 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:42:22.203 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection_1
+Ingesting batch data into Milvus:   0%|          | 0/2 [00:00<?, ?it/s]2025-04-23 14:42:23.100 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection test_collection_1
+Ingesting batch data into Milvus:  50%|█████     | 1/2 [00:00<00:00,  1.11it/s]2025-04-23 14:42:24.463 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 21 records into collection test_collection_1
+Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.17s/it]Ingesting batch data into Milvus: 100%|██████████| 2/2 [00:02<00:00,  1.13s/it]
+2025-04-23 14:42:24.465 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 53 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457543658528834722, 457543658528834723, 457543658528834724, 457543658528834725, 457543658528834726, 457543658528834727, 457543658528834728, 457543658528834729, 457543658528834730, 457543658528834731, 457543658528834732, 457543658528834733, 457543658528834734, 457543658528834735, 457543658528834736, 457543658528834737, 457543658528834738, 457543658528834739, 457543658528834740, 457543658528834741, 457543658528834742, 457543658528834743, 457543658528834744, 457543658528834745, 457543658528834746, 457543658528834747, 457543658528834748, 457543658528834749, 457543658528834750, 457543658528834751, 457543658528834752, 457543658528834753], "cost": 0}, {"insert_count": 21, "ids": [457543658876699874, 457543658876699875, 457543658876699876, 457543658876699877, 457543658876699878, 457543658876699879, 457543658876699880, 457543658876699881, 457543658876699882, 457543658876699883, 457543658876699884, 457543658876699885, 457543658876699886, 457543658876699887, 457543658876699888, 457543658876699889, 457543658876699890, 457543658876699891, 457543658876699892, 457543658876699893, 457543658876699894], "cost": 0}]', 'time_taken': 2.2619388103485107}
+2025-04-23 14:42:24.465 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54184 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-23 14:42:44.022 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: pod-to-boardcast是什么 ---
+2025-04-23 14:42:44.022 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: pod-to-boardcast是什么 ===
+2025-04-23 14:42:44.024 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
+2025-04-23 14:42:44.024 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection_1
+2025-04-23 14:42:44.883 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-23 14:42:44.884 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-23 14:42:51.231 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 5
+2025-04-23 14:42:51.232 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54293 - "POST /pipeline HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [39761]

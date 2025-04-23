@@ -11,13 +11,19 @@
       "file_type": "pdf",
       "strategy": "markdown",
       "params": {
-        "format_chunk_flag": true
+        "format_chunk_flag": true,
+        "overlap_chunk_size": 100,
+        "markdown_chunk_limit": 500
       }
     },
     {
       "file_type": "md",
       "strategy": "markdown",
-      "params": {}
+      "params": {
+        "format_chunk_flag": true,
+        "overlap_chunk_size": 100,
+        "markdown_chunk_limit": 500
+      }
     }
   ],
   "ingest_text": [
@@ -25,7 +31,7 @@
       "type": "milvus",
       "params": {
         "batch_size_limit": 32,
-        "collection_name": "test_collection_20250422_3"    
+        "collection_name": "test_collection"    
       }
     }
   ],

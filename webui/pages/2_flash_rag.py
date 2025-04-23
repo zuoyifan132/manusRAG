@@ -15,7 +15,7 @@ from loguru import logger
 from components.sidebar import RagSidebar
 
 ABS_PATH = Path(__file__).absolute()
-PROJECT_PATH = ABS_PATH.parent.parent
+PROJECT_PATH = ABS_PATH.parent.parent.parent
 
 # 创建临时文件夹
 TEMP_DIR = os.path.join(PROJECT_PATH, "temp_uploads")
@@ -24,11 +24,11 @@ os.makedirs(TEMP_DIR, exist_ok=True)
 # 默认配置文件路径
 DEFAULT_SEARCH_CONFIG = os.environ.get(
     "SEARCH_CONFIG_PATH", 
-    "/Users/evan/Desktop/work/wind/FlashC/rag/examples/search_example_config.json"
+    rf"{PROJECT_PATH}/examples/search_example_config.json"
 )
 DEFAULT_INGEST_CONFIG = os.environ.get(
     "INGEST_CONFIG_PATH", 
-    "/Users/evan/Desktop/work/wind/FlashC/rag/examples/ingest_data_example_config.json"
+    rf"{PROJECT_PATH}/examples/ingest_data_example_config.json"
 )
 
 # 页面配置
@@ -637,8 +637,8 @@ with st.container():
                                 config=search_config_path
                             ):
                                 response += token
-                                message_placeholder.code(response + "▌", language=None)
-                            message_placeholder.code(response, language=None)
+                                message_placeholder.markdown(response + "▌")
+                            message_placeholder.markdown(response)
                             answer_status_placeholder.write("🤖 回答完成")
                         except Exception as e:
                             st.error(f"生成回答时出错: {str(e)}")

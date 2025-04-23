@@ -2,7 +2,7 @@ import json
 import requests
 
 
-BASE_URL = "http://10.106.51.224:17724"
+BASE_URL = "http://127.0.0.1:17724"
 
 
 def test_pdf_2_text(parse_strategy="pypdf2"):
@@ -10,7 +10,7 @@ def test_pdf_2_text(parse_strategy="pypdf2"):
     Test the /pdf_2_text endpoint.
     """
     print("=== Testing /pdf_2_text ===")
-    pdf_path = "test.pdf" 
+    pdf_path = "dummy_file/DeepSeek_R1.pdf" 
     
     try:
         with open(pdf_path, "rb") as pdf_file:
@@ -181,7 +181,7 @@ def run_all_tests():
 
     # Step 1: Test PDF to text extraction
     print("\n--- Starting Test Sequence ---")
-    extracted_text = test_pdf_2_text(parse_strategy="pypdf2")
+    extracted_text = test_pdf_2_text(parse_strategy="minerU")
     if not extracted_text:
         print("\n--- Extraction Test Failed. Aborting... ---")
         return
@@ -211,7 +211,7 @@ def run_all_tests():
         query="2020年CPI上涨了多少", 
         collection_name=collection_name, 
         milvus_top_k=20,
-        rerank_top_k=3, 
+        rerank_top_k=10, 
         database_strategy="milvus",
         rerank_strategy="bge-reranker-v2-m3",
         filter="summary_doc_id == 789456"
