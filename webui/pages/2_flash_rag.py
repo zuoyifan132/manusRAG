@@ -13,6 +13,7 @@ import shutil
 from loguru import logger
 
 from components.sidebar import RagSidebar
+from webui.utils.file_monitor import file_monitor
 
 ABS_PATH = Path(__file__).absolute()
 PROJECT_PATH = ABS_PATH.parent.parent.parent
@@ -29,6 +30,11 @@ DEFAULT_SEARCH_CONFIG = os.environ.get(
 DEFAULT_INGEST_CONFIG = os.environ.get(
     "INGEST_CONFIG_PATH", 
     rf"{PROJECT_PATH}/examples/ingest_data_example_config.json"
+)
+# 默认监控目录
+DEFAULT_MONITOR_DIR = os.environ.get(
+    "MONITOR_DIR_PATH",
+    rf"{PROJECT_PATH}/webui/database"
 )
 
 # 页面配置
@@ -91,6 +97,11 @@ if "ui_update_counter" not in st.session_state:
     st.session_state.ui_update_counter = 0
 if "milvus_status" not in st.session_state:
     st.session_state.milvus_status = None
+# 文件监控状态
+if "use_file_monitor" not in st.session_state:
+    st.session_state.use_file_monitor = False
+if "monitor_status" not in st.session_state:
+    st.session_state.monitor_status = {"status": "stopped"}
 
 # 初始化侧边栏
 rag_sidebar = RagSidebar()
@@ -319,6 +330,54 @@ with st.container():
     with col1:
         use_config = st.checkbox("使用配置文件", value=st.session_state.use_config_file, help="选择后将使用配置文件进行处理，否则使用上传文件")
         st.session_state.use_config_file = use_config
+
+        # 添加文件夹监控选项
+        use_monitor = st.checkbox("启用文件夹监控", value=st.session_state.use_file_monitor, help="启用后将监控指定目录，自动处理变更文件")
+        st.session_state.use_file_monitor = use_monitor
+        
+        if use_monitor:
+            monitor_dir = st.text_input("监控目录路径", value=DEFAULT_MONITOR_DIR, help="将监控此目录下所有文件的变更")
+            monitor_config = st.text_input("监控任务配置文件路径", value=DEFAULT_INGEST_CONFIG, help="处理监控文件的配置")
+            
+            col_mon1, col_mon2 = st.columns(2)
+            with col_mon1:
+                if st.button("启动监控", use_container_width=True, type="primary", 
+                            disabled=file_monitor.running):
+                    if file_monitor.start(monitor_dir, monitor_config):
+                        st.session_state.monitor_status = file_monitor.status()
+                        st.success(f"已启动对 {monitor_dir} 的监控")
+                        st.session_state.ui_update_counter += 1
+                        st.rerun()
+                    else:
+                        st.error("启动监控失败")
+            
+            with col_mon2:
+                if st.button("停止监控", use_container_width=True, type="secondary", 
+                           disabled=not file_monitor.running):
+                    if file_monitor.stop():
+                        st.session_state.monitor_status = {"status": "stopped"}
+                        st.info("已停止文件监控")
+                        st.session_state.ui_update_counter += 1
+                        st.rerun()
+                    else:
+                        st.error("停止监控失败")
+            
+            # 显示监控状态
+            monitor_status = file_monitor.status()
+            st.session_state.monitor_status = monitor_status
+            
+            status_color = "green" if monitor_status["status"] == "running" else "red"
+            status_text = "运行中" if monitor_status["status"] == "running" else "已停止"
+            
+            st.markdown(f"""
+            <div style="padding: 10px; border-radius: 5px; background-color: #f0f2f6;">
+                <p><b>监控状态:</b> <span style="color:{status_color};">{status_text}</span></p>
+                {f'<p><b>监控目录:</b> {monitor_status.get("directory", "")}</p>' if monitor_status["status"] == "running" else ""}
+                {f'<p><b>下次执行:</b> {monitor_status.get("next_run", "")}</p>' if monitor_status["status"] == "running" else ""}
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("---")
 
         if use_config:
             ingest_config_path = st.text_input("知识库摄入配置路径", value=DEFAULT_INGEST_CONFIG, help="请输入处理文件的配置文件路径")
