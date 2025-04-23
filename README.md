@@ -75,6 +75,9 @@ sequenceDiagram
 
 ## Features
 
+### NEW! - Folder Monitoring
+The system now supports folder monitoring, automatically detecting new or updated files in specified directories and periodically processing them for database insertion, eliminating the need for manual uploads.
+
 | Category | Features | Details |
 |----------|----------|---------|
 | **Document Processing** | File Format Support | • PDF (via minerU or PyPDF2)<br>• Markdown<br>• HTML<br>• Text files |
@@ -82,6 +85,7 @@ sequenceDiagram
 | **Vector Database** | Milvus Integration | • Efficient semantic search<br>• Collection management<br>• System monitoring<br>• Performance optimization |
 | **Retrieval & Reranking** | Advanced Search | • Configurable retrieval parameters (top_k, etc.)<br>• BGE Reranker v2 m3 for improved relevance<br>• Hybrid retrieval strategies |
 | **User Interface** | Streamlit Web App | • Single and multiple file upload<br>• Database monitoring and management<br>• Conversation history tracking<br>• Multi-session support<br>• Interactive RAG-powered chat |
+| **Automation** | Folder Monitoring | • Automatically monitor specified folders<br>• Detect new and updated files<br>• Periodically process and insert into database<br>• No manual file uploads required |
 
 ## System Architecture
 
@@ -221,6 +225,17 @@ Once started, the system opens a Streamlit-based web interface in your default b
 - Switch between existing sessions
 - Ask questions about your documents
 - View the retrieved context used for each answer
+- Configure folder monitoring for automatic document ingestion
+
+### Folder Monitoring
+To configure folder monitoring:
+1. Navigate to the "Folder Monitoring" tab in the web interface
+2. Specify the folder path to monitor
+3. Set the monitoring interval (how often to check for updates)
+4. Choose processing configurations for documents in the folder
+5. Start the monitoring service
+
+The system will automatically detect new or updated files in the folder and add them to the vector database after processing.
 
 ## Advanced Usage
 
