@@ -17,6 +17,10 @@ from parser.MarkdownParser import (
     MarkdownParser,
     NaiveMarkdownParser
 )
+from parser.WordParser import (
+    WordParser,
+    DocxParser
+)
 from services.config import allowed_ips
 from chunking.baseChunker import BaseChunker, Document
 from chunking.textChunker import PunctuationChunker, RecursiveChunker
@@ -114,6 +118,10 @@ MARKDOWN_PARSER_STRATEGY_MAP = {
     "naive": NaiveMarkdownParser
 }
 
+WORD_PARSER_STRATEGY_MAP = {
+    "docx": DocxParser
+}
+
 CHUNK_STRATEGY_MAP = {
     "punctuation": PunctuationChunker,
     "recursive": RecursiveChunker,
@@ -197,6 +205,34 @@ def parse_markdown_file(file_content: bytes, parse_strategy: str) -> Dict:
     }
 
 
+def parse_word_file(file_content: bytes, parse_strategy: str) -> Dict:
+    """
+    Extract text from an word file using a specific parse strategy.
+    """
+    if parse_strategy not in WORD_PARSER_STRATEGY_MAP:
+        raise ValueError(f"Invalid parse strategy: '{parse_strategy}'. "
+                  f"Valid strategies are: {', '.join(WORD_PARSER_STRATEGY_MAP.keys())}")
+    
+    word_parser_obj: Type[WordParser] = WORD_PARSER_STRATEGY_MAP[parse_strategy]
+
+    word_path = f"./__upload_file__/{uuid.uuid4().hex}.docx"
+    with open(word_path, "wb") as f:
+        f.write(file_content)
+
+    word_parser_instance = word_parser_obj(word_path=word_path)
+    start_time = time.time()
+    word_parser_instance.read_content()
+    extracted_text = word_parser_instance.extract_text()
+    end_time = time.time()
+
+    os.remove(word_path)
+    return {
+        "status": "success",
+        "extracted_text": extracted_text,
+        "time_taken": end_time - start_time
+    }
+    
+
 def parse_doc_file(file_content: bytes, filename: str, parse_strategy: str) -> Dict:
     """
     Extract text from an uploaded document file using a specific parse strategy.
@@ -207,6 +243,8 @@ def parse_doc_file(file_content: bytes, filename: str, parse_strategy: str) -> D
         return parse_pdf_file(file_content, parse_strategy)
     elif file_type == "md":
         return parse_markdown_file(file_content, parse_strategy)
+    elif file_type == "docx":
+        return parse_word_file(file_content, parse_strategy)
     else:
         raise ValueError(f"Unsupported file type: {file_type}")
     

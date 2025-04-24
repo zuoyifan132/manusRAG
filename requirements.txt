@@ -86,6 +86,7 @@ PyMuPDF==1.24.14
 pyparsing==3.2.3
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
+python-docx==0.8.11
 python-dotenv==1.1.0
 python-multipart==0.0.20
 pytz==2025.2

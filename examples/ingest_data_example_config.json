@@ -2,7 +2,8 @@
   "doc_2_text": {
     "strategy": {
       "pdf": "minerU",
-      "md": "naive"
+      "md": "naive",
+      "docx": "docx"
     },
     "doc_path": "../test/dummy_file/2503.14476v1.pdf"
   },
@@ -23,6 +24,15 @@
         "format_chunk_flag": true,
         "overlap_chunk_size": 100,
         "markdown_chunk_limit": 500
+      }
+    },
+    {
+      "file_type": "docx",
+      "strategy": "recursive",
+      "params": {
+        "format_chunk_flag": true,
+        "overlap_chunk_size": 100,
+        "chunk_size": 500
       }
     }
   ],
