@@ -7,16 +7,8 @@ from pathlib import Path
 from datetime import datetime
 from loguru import logger
 from core import flash_rag
+import schedule
 
-# 尝试导入schedule包，如果不存在则自动安装
-try:
-    import schedule
-except ImportError:
-    import subprocess
-    import sys
-    logger.info("正在安装schedule包...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "schedule"])
-    import schedule
 
 # 创建 webui/data 目录
 WEBUI_PATH = Path(__file__).absolute().parent.parent
@@ -41,6 +33,7 @@ def calculate_md5(file_path):
 def get_all_files(directory):
     """递归获取目录下所有文件的路径"""
     all_files = []
+    logger.info(f"开始遍历目录: {directory}")
     try:
         for root, _, files in os.walk(directory):
             for file in files:
@@ -50,6 +43,8 @@ def get_all_files(directory):
                     all_files.append(file_path)
     except Exception as e:
         logger.error(f"遍历目录 {directory} 失败: {str(e)}")
+
+    logger.info(f"遍历目录 {directory} 成功，找到 {len(all_files)} 个文件")
     return all_files
 
 def load_md5_data():
@@ -132,8 +127,9 @@ class FileMonitor:
         self.running = False
         self.monitor_directory = None
         self.config_path = None
+        self.callback = None  # 添加回调函数
     
-    def start(self, directory, config_path):
+    def start(self, directory, config_path, callback=None):
         """启动文件监控服务"""
         if self.running:
             logger.warning("文件监控服务已在运行中")
@@ -142,6 +138,7 @@ class FileMonitor:
         self.monitor_directory = directory
         self.config_path = config_path
         self.running = True
+        self.callback = callback  # 设置回调函数
         
         # 立即执行一次扫描
         logger.info(f"启动文件监控服务，监控目录: {directory}")
@@ -149,7 +146,7 @@ class FileMonitor:
         
         # 设置每天凌晨12点执行
         schedule.every().day.at("00:00").do(
-            lambda: scan_directory(self.monitor_directory, self.config_path)
+            lambda: self._execute_task()
         )
         
         # 在单独的线程中运行调度任务
@@ -157,6 +154,16 @@ class FileMonitor:
         self.monitor_thread.start()
         
         return True
+    
+    def _execute_task(self):
+        """执行监控任务并在完成后触发回调"""
+        logger.info(f"正在执行监控任务：{self.monitor_directory}")
+        result = scan_directory(self.monitor_directory, self.config_path)
+        # 任务执行完成后调用回调函数
+        if self.callback and callable(self.callback):
+            logger.info("监控任务执行完成，调用回调函数")
+            self.callback()
+        return result
     
     def stop(self):
         """停止文件监控服务"""

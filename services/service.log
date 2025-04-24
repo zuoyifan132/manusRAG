@@ -1,37 +1,49 @@
-INFO:     Started server process [44202]
+INFO:     Started server process [50890]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:17724 (Press CTRL+C to quit)
-2025-04-23 17:37:40.563 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
-2025-04-23 17:37:40.563 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/a9627a60-251c-4fff-9fe4-eea052dcb7f3_20250306_AInews.md
-2025-04-23 17:37:40.563 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1188
-2025-04-23 17:37:40.564 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
-2025-04-23 17:37:40.564 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
-2025-04-23 17:37:40.565 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共8块
-2025-04-23 17:37:40.565 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
-Open /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db failed, the file has been opened by another program
-2025-04-23 17:37:40,602 [ERROR][_create_connection]: Failed to create new connection using: a21b3967ce0145bfa7923d970a892ad8 (milvus_client.py:923)
-2025-04-23 17:37:40.602 | ERROR    | services.pipeline:ingest_text:178 - 导入到 milvus 时错误: <ConnectionConfigException: (code=1, message=Open local milvus failed)>
-2025-04-23 17:37:40.602 | WARNING  | services.pipeline:run_pipeline:323 - --- 部分数据导入失败，继续流程... ---
-2025-04-23 17:37:40.602 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
-INFO:     127.0.0.1:65437 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/01825d88-6fe7-4b0a-9748-99d5de831b36_20250307_AI_news.md
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 1307
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共11块
-2025-04-23 17:37:40.606 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
-2025-04-23 17:37:41.139 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/rag/database/milvus/milvus_db/milvus_db.db
-2025-04-23 17:37:41.171 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: test_collection
+2025-04-24 11:00:35.005 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询:  ---
+2025-04-24 11:00:35.005 | INFO     | services.pipeline:process_uploaded_file:81 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/9c18a5b2-3892-46f6-9d9d-9b09397256f9_DeepSeek-R1 与 Agents 框架结合效率分析.md
+2025-04-24 11:00:35.006 | INFO     | services.pipeline:process_uploaded_file:100 - 成功从文件中提取文本，长度: 4203
+2025-04-24 11:00:35.006 | INFO     | services.pipeline:run_pipeline:302 - 处理提取的文本
+2025-04-24 11:00:35.006 | INFO     | services.pipeline:chunk_text:117 - === 运行文本分块 ===
+2025-04-24 11:00:35.008 | INFO     | services.pipeline:chunk_text:141 - 分块成功: 共29块
+2025-04-24 11:00:35.008 | INFO     | services.pipeline:ingest_text:150 - === 运行文本导入 ===
+Open /Users/evan/Desktop/work/wind/FlashC/manusRAG/database/milvus/milvus_db/milvus_db.db failed, the file has been opened by another program
+2025-04-24 11:00:35,047 [ERROR][_create_connection]: Failed to create new connection using: 6cc8d17c27514e5283fdbe3d5cad72c1 (milvus_client.py:923)
+2025-04-24 11:00:36.587 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-24 11:00:36.677 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1745401061.233017 12500668 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
-I0000 00:00:1745401061.242061 12500668 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
-2025-04-23 17:37:42.998 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 11 records into collection test_collection
-2025-04-23 17:37:42.999 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 11 text chunks into database.', 'ingest_return': '[{"insert_count": 11, "ids": [457546416255926272, 457546416255926273, 457546416255926274, 457546416255926275, 457546416255926276, 457546416255926277, 457546416255926278, 457546416255926279, 457546416255926280, 457546416255926281, 457546416255926282], "cost": 0}]', 'time_taken': 1.8273429870605469}
-2025-04-23 17:37:42.999 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
-INFO:     127.0.0.1:65438 - "POST /pipeline HTTP/1.1" 200 OK
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [44202]
+I0000 00:00:1745463636.727871 12702296 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
+I0000 00:00:1745463636.737554 12702296 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
+2025-04-24 11:00:38.215 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 29 records into collection logseq_collection
+2025-04-24 11:00:38.216 | INFO     | services.pipeline:ingest_text:176 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 29 text chunks into database.', 'ingest_return': '[{"insert_count": 29, "ids": [457562819974135808, 457562819974135809, 457562819974135810, 457562819974135811, 457562819974135812, 457562819974135813, 457562819974135814, 457562819974135815, 457562819974135816, 457562819974135817, 457562819974135818, 457562819974135819, 457562819974135820, 457562819974135821, 457562819974135822, 457562819974135823, 457562819974135824, 457562819974135825, 457562819974135826, 457562819974135827, 457562819974135828, 457562819974135829, 457562819974135830, 457562819974135831, 457562819974135832, 457562819974135833, 457562819974135834, 457562819974135835, 457562819974135836], "cost": 0}]', 'time_taken': 1.5385518074035645}
+2025-04-24 11:00:38.216 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:64336 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-24 11:01:23.049 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: DeepSeek-R1 与 Agents 框架结合效率分析里面讲了什么 ---
+2025-04-24 11:01:23.049 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: DeepSeek-R1 与 Agents 框架结合效率分析里面讲了什么 ===
+2025-04-24 11:01:23.054 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-24 11:01:23.055 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-24 11:01:23.900 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-24 11:01:23.900 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-24 11:01:30.249 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 5
+2025-04-24 11:01:30.249 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:64390 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-24 11:02:37.716 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: open-r1 实验结论 ---
+2025-04-24 11:02:37.717 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: open-r1 实验结论 ===
+2025-04-24 11:02:37.718 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-24 11:02:37.719 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-24 11:02:38.398 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-24 11:02:38.398 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-24 11:02:44.114 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 10
+2025-04-24 11:02:44.114 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:64488 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-24 11:05:05.943 | INFO     | services.pipeline:run_pipeline:284 - --- 开始RAG流程，查询: RAG相关的技术有哪些 ---
+2025-04-24 11:05:05.943 | INFO     | services.pipeline:retrieval:186 - === 运行检索，查询: RAG相关的技术有哪些 ===
+2025-04-24 11:05:05.946 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-24 11:05:05.948 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-24 11:05:06.911 | INFO     | services.pipeline:retrieval:210 - 从 milvus 检索到 100 条结果
+2025-04-24 11:05:06.911 | INFO     | services.pipeline:rerank:220 - === 运行重排序 ===
+2025-04-24 11:05:11.916 | INFO     | services.pipeline:rerank:243 - 重排序结果数量: 10
+2025-04-24 11:05:11.916 | INFO     | services.pipeline:run_pipeline:357 - --- RAG流程完成 ---
+INFO:     127.0.0.1:64681 - "POST /pipeline HTTP/1.1" 200 OK

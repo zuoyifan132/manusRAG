@@ -31,7 +31,7 @@
       "type": "milvus",
       "params": {
         "batch_size_limit": 32,
-        "collection_name": "test_collection"    
+        "collection_name": "logseq_collection"    
       }
     }
   ],

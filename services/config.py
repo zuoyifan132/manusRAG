@@ -13,3 +13,5 @@ EMBEDDING_API_URL = "http://127.0.0.1:12212/bge_m3_embedding"
 MINERU_API_URL = "http://127.0.0.1:8888/file_parse"
 OPENAI_API_KEY = ""
 
+MILVUS_RETRY_WAIT_TIME = 1
+MILVUS_RETRY_TIMES = 3

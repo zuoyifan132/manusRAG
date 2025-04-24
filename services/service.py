@@ -6,7 +6,8 @@ import time
 from loguru import logger
 from typing import Type, Any, List, Dict, Optional, Union, Literal, Tuple
 from pydantic import BaseModel, Field
-
+from tenacity import retry, stop_after_attempt, wait_fixed, RetryError
+from services.config import MILVUS_RETRY_WAIT_TIME, MILVUS_RETRY_TIMES
 from parser.PDFParser import (
     PDFParser, 
     PyPDF2Parser,
@@ -320,6 +321,7 @@ def process_chunk_text(request: ChunkRequest) -> List[Dict]:
     }
 
 
+@retry(stop=stop_after_attempt(MILVUS_RETRY_TIMES), wait=wait_fixed(MILVUS_RETRY_WAIT_TIME))
 def process_ingest_text(request: IngestRequest) -> Dict:
     """
     Ingest chunked text into the database.

@@ -102,10 +102,34 @@ if "use_file_monitor" not in st.session_state:
     st.session_state.use_file_monitor = False
 if "monitor_status" not in st.session_state:
     st.session_state.monitor_status = {"status": "stopped"}
+# 监控状态更新标志
+if "monitor_status_update_needed" not in st.session_state:
+    st.session_state.monitor_status_update_needed = False
 
 # 初始化侧边栏
 rag_sidebar = RagSidebar()
 rag_sidebar.sidebar()
+
+# 定义更新监控状态的函数
+def update_monitor_status():
+    """更新监控状态并触发页面刷新"""
+    # 将需要更新标志设为True
+    st.session_state.monitor_status_update_needed = True
+    # 使用st.experimental_rerun()来触发页面刷新
+    if hasattr(st, 'experimental_rerun'):
+        st.experimental_rerun()
+    else:
+        st.rerun()
+
+# 检查是否需要更新监控状态
+if st.session_state.monitor_status_update_needed:
+    # 重置标志
+    st.session_state.monitor_status_update_needed = False
+    # 更新监控状态
+    if file_monitor.running:
+        st.session_state.monitor_status = file_monitor.status()
+        st.session_state.ui_update_counter += 1
+        st.rerun()
 
 # 清除聊天历史函数
 def clear_chat_history():
@@ -339,11 +363,11 @@ with st.container():
             monitor_dir = st.text_input("监控目录路径", value=DEFAULT_MONITOR_DIR, help="将监控此目录下所有文件的变更")
             monitor_config = st.text_input("监控任务配置文件路径", value=DEFAULT_INGEST_CONFIG, help="处理监控文件的配置")
             
-            col_mon1, col_mon2 = st.columns(2)
+            col_mon1, col_mon2, col_mon3 = st.columns([1, 1, 1])
             with col_mon1:
                 if st.button("启动监控", use_container_width=True, type="primary", 
                             disabled=file_monitor.running):
-                    if file_monitor.start(monitor_dir, monitor_config):
+                    if file_monitor.start(monitor_dir, monitor_config, callback=update_monitor_status):
                         st.session_state.monitor_status = file_monitor.status()
                         st.success(f"已启动对 {monitor_dir} 的监控")
                         st.session_state.ui_update_counter += 1
@@ -361,6 +385,13 @@ with st.container():
                         st.rerun()
                     else:
                         st.error("停止监控失败")
+            
+            with col_mon3:
+                if st.button("刷新状态", use_container_width=True, 
+                           disabled=not file_monitor.running):
+                    st.session_state.monitor_status = file_monitor.status()
+                    st.session_state.ui_update_counter += 1
+                    st.rerun()
             
             # 显示监控状态
             monitor_status = file_monitor.status()
@@ -532,7 +563,6 @@ with col2:
             st.session_state.milvus_status = flash_rag.get_milvus_status()
         
         milvus_status = st.session_state.milvus_status
-        logger.info(f"milvus_status: {milvus_status}")
 
         st.markdown("""
         <div style="background-color: #f0f7ff; padding: 10px; border-radius: 10px; border-left: 5px solid #0f52ba;">
