@@ -12,7 +12,7 @@
     {
         "strategy": "bge-reranker-v2-m3",
         "params": {
-          "top_k": 10
+          "top_k": 5
         }
     }
   ],

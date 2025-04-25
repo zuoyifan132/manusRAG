@@ -1,13 +1,3 @@
-"""
-@File   : flash_rag.py
-@Time   : 2025/04/14 19:08
-@Author : yliu.lyndon
-@Desc   : Flash RAG 知识库检索系统核心功能
-"""
-
-import sys
-print(sys.path)
-
 import json
 from loguru import logger
 import requests
@@ -72,7 +62,7 @@ def search_data(query: str, config: str = None):
 
     result = call_pipeline_service(config_data, query)
 
-    print(f"search_data result: {result}")
+    # print(f"search_data result: {result}")
         
     # 如果执行成功，转换结果格式
     if result.get("status") == "success":
