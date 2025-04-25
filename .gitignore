@@ -19,6 +19,8 @@ rerank/__pycache__/
 services/__pycache__/
 test/__pycache__/
 utils/__pycache__/
+utils/minerU_app/__pycache__/
+utils/minerU_app/output/
 webui/__pycache__/
 webui/components/__pycache__/
 webui/core/__pycache__/
