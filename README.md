@@ -21,6 +21,8 @@ graph TD
     Retriever --> Reranker[Reranker]
     QueryEngine --> LLM[LLM]
     Reranker --> LLM
+    QueryEngine --> DeepSearch[Deep Search]
+    DeepSearch --> VectorDB
     
     subgraph "Backend Services"
         Parser
@@ -29,6 +31,7 @@ graph TD
         Retriever
         Reranker
         LLM
+        DeepSearch
     end
     
     subgraph "Frontend"
@@ -39,6 +42,7 @@ graph TD
     style VectorDB fill:#bbf,stroke:#333,stroke-width:2px
     style Reranker fill:#bfb,stroke:#333,stroke-width:2px
     style LLM fill:#fbb,stroke:#333,stroke-width:2px
+    style DeepSearch fill:#ff9,stroke:#333,stroke-width:2px
 ```
 
 ### 🔄 Workflow Diagram
@@ -52,6 +56,7 @@ sequenceDiagram
     participant DB as Vector Database
     participant Retriever
     participant Reranker
+    participant DeepSearch
     participant LLM
     
     %% Document ingestion flow
@@ -67,13 +72,19 @@ sequenceDiagram
     Retriever->>DB: Semantic search
     DB-->>Retriever: Return relevant chunks
     Retriever->>Reranker: Re-rank results
-    Reranker-->>LLM: Top chunks as context
+    Reranker-->>DeepSearch: Top chunks as initial context
+    DeepSearch->>DB: Advanced semantic search
+    DB-->>DeepSearch: Return refined documents
+    DeepSearch-->>LLM: Enhanced context
     UI->>LLM: User question
     LLM-->>UI: Generated answer
     UI-->>User: Display answer with sources
 ```
 
 ## ✨ Features
+
+### 🚀 NEW! - Deep Search Q&A
+The system now includes a powerful deep search Q&A feature that performs multi-round, multi-level document retrieval, significantly improving answer accuracy and relevance. This is particularly effective for handling complex knowledge scenarios and domain-specific questions. The WebUI supports visualizing these deep search results, providing transparency into the retrieval process.
 
 ### 🆕 NEW! - DOCX File Support
 The system now supports Microsoft Word (DOCX) files, making it even easier to process and analyze your Office documents within the RAG pipeline.
@@ -86,9 +97,10 @@ The system now supports folder monitoring, automatically detecting new or update
 | **📄 Document Processing** | File Format Support | • PDF (via minerU or PyPDF2)<br>• Microsoft Word (DOCX)<br>• Markdown<br>• HTML<br>• Text files |
 | **📑 Text Chunking** | Chunking Methods | • Text chunking (textChunker)<br>• Code chunking (codeChunker)<br>• Markdown-aware chunking (markdownChunker)<br>• HTML-aware chunking (htmlChunker) |
 | **🗄️ Vector Database** | Milvus Integration | • Efficient semantic search<br>• Collection management<br>• System monitoring<br>• Performance optimization |
-| **🔎 Retrieval & Reranking** | Advanced Search | • Configurable retrieval parameters (top_k, etc.)<br>• BGE Reranker v2 m3 for improved relevance<br>• Hybrid retrieval strategies |
-| **🖥️ User Interface** | Streamlit Web App | • Single and multiple file upload<br>• Database monitoring and management<br>• Conversation history tracking<br>• Multi-session support<br>• Interactive RAG-powered chat |
+| **🔎 Retrieval & Reranking** | Advanced Search | • Configurable retrieval parameters (top_k, etc.)<br>• BGE Reranker v2 m3 for improved relevance<br>• Hybrid retrieval strategies<br>• Deep search with multi-stage retrieval |
+| **🖥️ User Interface** | Streamlit Web App | • Single and multiple file upload<br>• Database monitoring and management<br>• Conversation history tracking<br>• Multi-session support<br>• Interactive RAG-powered chat<br>• Real-time deep search visualization<br>• Answer source tracing |
 | **⚙️ Automation** | Folder Monitoring | • Automatically monitor specified folders<br>• Detect new and updated files<br>• Periodically process and insert into database<br>• No manual file uploads required |
+| **🧠 Deep Q&A** | Enhanced Q&A Capabilities | • Multi-round retrieval enhancement<br>• Complex question processing<br>• Knowledge association capabilities<br>• Precise citation and provenance |
 
 ## 🏗️ System Architecture
 
@@ -98,6 +110,7 @@ manusRAG is composed of several integrated services:
 3. **🔄 Reranking Service**: Improves retrieval quality
 4. **💬 Conversation Management**: Handles chat history and context
 5. **🖥️ Web Interface**: Provides user-friendly access to all features
+6. **🔍 Deep Search Engine**: Enables multi-round, multi-level document retrieval and association
 
 ## 🚀 Installation
 
@@ -229,6 +242,22 @@ Once started, the system opens a Streamlit-based web interface in your default b
 - ❓ Ask questions about your documents
 - 🔍 View the retrieved context used for each answer
 - 📁 Configure folder monitoring for automatic document ingestion
+- 🧠 Use deep search Q&A for complex questions
+- 📊 View visualizations of the retrieval process
+- 📑 Access detailed sources and citations for answers
+
+### Deep Search Q&A Guide
+To use the deep search Q&A feature:
+1. Select "Deep Search Mode" in the conversation interface
+2. Enter your complex question
+3. The system will automatically perform multi-round retrieval, identifying key information points
+4. Results will include more accurate answers with detailed source citations
+5. The interface visualizes the retrieval process and relationships between information
+
+Deep search is particularly suitable for:
+- Complex questions requiring information from multiple documents
+- Domain-specific knowledge queries
+- Scenarios requiring precise source citations
 
 ### Folder Monitoring
 To configure folder monitoring:
@@ -245,8 +274,21 @@ The system will automatically detect new or updated files in the folder and add 
 ### Custom Pipeline Example
 For advanced users, custom pipelines can be created by combining different components. See `examples/pipeline_example.py` for a detailed example.
 
+### Deep Search Configuration
+Advanced users can customize deep search behavior by modifying the deep search configuration file:
+```bash
+examples/deep_search_config.json
+```
+
+Key parameters include:
+- Search depth levels
+- Per-round retrieval count
+- Association threshold settings
+- Domain-specific knowledge enhancement configurations
+
 ### Extending the System
 manusRAG is designed to be modular and extensible:
 - 🔌 Add new parsers by implementing the `baseParser` interface
 - 🧩 Add new chunking strategies by implementing the `baseChunker` interface
 - 🔄 Add new reranking methods by extending the reranking service
+- 🔍 Customize deep search algorithms by implementing the `deepSearchInterface`

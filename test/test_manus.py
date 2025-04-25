@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     # original_query = "阿里巴巴、腾讯和拼多多的共同股东有哪些？"
 
-    original_query = "DeepSeek-R1 与 Agents 框架结合效率分析"
+    original_query = "请问Rachel的电话是多少"
 
     deep_search_agent = DeepSearch()
 

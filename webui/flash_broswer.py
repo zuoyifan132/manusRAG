@@ -15,41 +15,36 @@ import streamlit as st
 from components.sidebar import FlashSidebar
 from components.faq import truncate_markdown_table
 from core.api_deepseek import LLMCaller
-from core.flash_agent import FlashAgentPlanner
-# from core.flash_rag import flash_rag_pipeline
+# from core.flash_agent import FlashAgentPlanner
 from utils.tool_util import TOOLS, TOOLS_DESC
+from manus.manus_deep_search_agent import DeepSearch
+from manus.llm import OpenAILLM
+from utils.aigc_api import openai_stream_generate
+from openai import OpenAI
+from services.config import OPENAI_API_KEY
+from collections import defaultdict
+import threading
+import io
+import queue
+from contextlib import redirect_stdout
 
 
 # Streamlit UI
 # 设置initial_sidebar_state 为 "collapsed"，默认折叠侧边栏提高初始加载速度
-st.set_page_config(page_title="Flash-Browser", page_icon="⚡", layout="wide")
-st.title("⚡ Flash-Browser")
-st.caption("🚀 Powered by FlashC Group")
+st.set_page_config(page_title="ManusRAG", page_icon="⚡", layout="wide")
+st.title("⚡ ManusRAG")
+st.caption("🚀 Powered by Evan ZUO")
 
 # >>> 侧边栏设置
 Flashsidebar = FlashSidebar()
 Flashsidebar.sidebar()
 
-# >>> 聊天窗口设置
-uploaded_file = st.file_uploader(
-    label="Upload a pdf, docx, or txt file",
-    type=["pdf", "docx", "txt"],
-    help="Scanned documents are not supported yet!",
-    label_visibility="collapsed"
-)
-if uploaded_file:
-    # 激活文档解析模式
-    try:
-        file = flash_rag_pipeline(uploaded_file)
-    except:
-        pass
-
 with st.expander("高级功能"):
-    agent_flag = st.checkbox("Flash Agent Mode")
+    deep_search_flag = st.checkbox("DeepSearch Mode")
     max_iterations = st.number_input(
         label="Max Iterations",
-        min_value=1, max_value=15, value=15,
-        help="设置 Agent 最大迭代次数"
+        min_value=1, max_value=15, value=3,
+        help="设置 DeepSearch 最大迭代次数"
     )
 
 # >>> 公共参数提取
@@ -64,14 +59,19 @@ def get_model_caller(model_name):
     return LLMCaller(api_key="", model=model_name)
 
 
-@st.cache_resource
-def get_flash_agent_planner():
-    """"""
-    return FlashAgentPlanner()
+@st.cache_resource(show_spinner=False)
+def get_deep_search_agent(model_name, max_iter):
+    """获取DeepSearch代理，使用指定的模型和最大迭代次数"""
+    llm = OpenAILLM(
+        model=model_name,
+        temperature=temperature,
+        max_tokens=max_tokens
+    )
+    return DeepSearch(llm=llm, max_iter=max_iter)
 
 
 caller = get_model_caller(selected_model)
-flash_agent_planner = get_flash_agent_planner()
+# deep_search_agent的实例化会在调用时进行，以确保使用最新的参数
 
 
 def stream(text: str, delay: float = 0.01):
@@ -80,173 +80,221 @@ def stream(text: str, delay: float = 0.01):
         time.sleep(delay)
 
 
-def flash_agent_workflow(question: str):
-    """"""
+def format_retrieved_docs(retrieved_docs):
+    """格式化检索到的文档，按文档分组并排序"""
+    if not retrieved_docs:
+        return []
+    
+    # 将检索结果转换为更易于处理的格式
+    formatted_results = []
+    for i, doc in enumerate(retrieved_docs):
+        formatted_results.append({
+            "文档": f"文档 #{i+1}",
+            "内容": doc,
+            "相关度": 1.0  # 由于没有相关度信息，默认设为1.0
+        })
+    
+    # 按文档分组
+    grouped_results = defaultdict(list)
+    for result in formatted_results:
+        grouped_results[result["文档"]].append(result)
+    
+    # 返回分组后的结果
+    return grouped_results
+
+
+class ThreadSafeStringIO(io.StringIO):
+    """线程安全的StringIO，用于在多线程环境中捕获输出"""
+    def __init__(self):
+        super().__init__()
+        self.lock = threading.Lock()
+        self.output_queue = queue.Queue()
+    
+    def write(self, s):
+        with self.lock:
+            result = super().write(s)
+            if s.strip():  # 只加入非空白字符
+                # 确保每个输出都有换行符
+                if not s.endswith('\n'):
+                    s = s + '\n'
+                self.output_queue.put(s)
+            return result
+
+
+def flash_deep_search_workflow(question: str):
+    """DeepSearch工作流，实时流式显示DeepSearch的查询过程"""
     if not question:
         return
-
-    num_iteration = 0   # 用于记录Agent规划迭代次数
-    is_cmd_exist = True  # 用于记录当前是否存在工具调用
-    resp = {"content": "", "cmdInfo": []}   # 用于记录最终答案
-
-    # 初始化会话历史记录
-    if "agent_history" not in st.session_state:
-        st.session_state.agent_history = []
-
-    #
-    body = {
-        "appName": "admin",
-        "userId": "0",
-        "sessionId": "0",
-        "token": "0",
-        "current": {
-            "user": {
-                "query": "",
-                "info": {
-                    "model": "DeepSeek-V3",
-                    "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "toolDesc": TOOLS_DESC,
-                }
-            },
-            "response": []
-        },
-        "history": st.session_state.agent_history.copy()
-    }
-
-    # 问题
-    body["current"]["user"]["query"] = question
 
     st.session_state.messages.append({"role": "user", "content": question})
 
     with st.chat_message("human"):
         st.write(question)
 
-    # Agent 规划
-    chat_content = ""
+    # 创建用于流式输出的聊天消息
     with st.chat_message("ai"):
-
-        content = f"🤖 正在规划中 ..."
-        chat_content += content
-        st.write_stream(stream(content))
-
-        while is_cmd_exist and num_iteration < max_iterations:
-            # 执行agent规划服务
-            resp = flash_agent_planner.plan(body)
-            # 更新是否存在工具调用信号
-            is_cmd_exist = bool(len(resp["cmdInfo"]) > 0)
-            content = resp["content"]
-            chat_content += content
+        # 创建一个用于显示状态的占位符
+        status_placeholder = st.empty()
+        # 创建一个用于显示过程的占位符
+        process_placeholder = st.empty()
+        # 创建一个用于显示最终答案的占位符
+        message_placeholder = st.empty()
+        # 创建一个用于显示召回结果的占位符
+        retrieval_placeholder = st.empty()
+        
+        # 显示初始状态
+        status_placeholder.write("🔍 正在深度搜索中...")
+        process_content = ""
+        
+        # 创建线程安全的StringIO用于捕获输出
+        output_stream = ThreadSafeStringIO()
+        
+        # 获取DeepSearch实例
+        deep_search_agent = get_deep_search_agent(selected_model, max_iterations)
+        
+        # 存储最终结果的变量
+        final_results = {"answer": "", "docs": []}
+        
+        # 定义执行查询的函数
+        def run_query():
+            with redirect_stdout(output_stream):
+                final_answer, retrieved_docs = deep_search_agent.query(query=question)
+                final_results["answer"] = final_answer
+                final_results["docs"] = retrieved_docs
+        
+        # 在后台线程中执行查询
+        query_thread = threading.Thread(target=run_query)
+        query_thread.start()
+        
+        # 显示过程中的输出
+        try:
+            # 显示正在处理的消息
+            process_content += f"使用模型: {selected_model}, 最大迭代次数: {max_iterations}\n\n"
+            process_placeholder.code(process_content)
             
-
-            if is_cmd_exist:
-                st.write_stream(stream(content)) 
-                # 提取工具调用信息
-                tool_names = [cmd_info["name"] for cmd_info in resp["cmdInfo"]]
-                cmd_info_list = [{"name": cmd_info["name"], "args": cmd_info["args"]} for cmd_info in resp["cmdInfo"]]
-
-                content = f"🔧 调用工具: {'、'.join(tool_names)}"
-                chat_content += content
-                st.write_stream(stream(content))
-                content = f"🔧 调用参数: {json.dumps(cmd_info_list, indent=4, ensure_ascii=False)}"
-                chat_content += content
-                st.write_stream(stream(content))
-
-                # 执行工具调用
-                for idx, cmd_info in enumerate(cmd_info_list):
-                    tool_name, tool_args = cmd_info["name"], cmd_info["args"]
-                    try:
-                        tool_res = TOOLS[tool_name](**tool_args)
-                        content = f"✅ 工具调用成功"
-                        chat_content += content
-                        st.write_stream(stream(content))
-
-                        # 在UI中使用折叠区域显示完整结果
-                        with st.expander(f"查看工具 '{tool_name}' 返回结果", expanded=False):
-                            st.markdown(tool_res)
-                        
-                        # 为chat_content添加可能截断的结果
-                        is_table, truncated_res = truncate_markdown_table(tool_res, head_rows=15, tail_rows=5, truncation_message='... 表格中间行已省略，这里不做完整展示 ...')
-                        if is_table and truncated_res != tool_res:
-                            content = f"Observation: {truncated_res}"
-                        else:
-                            content = f"Observation: {tool_res}"
-                        chat_content += content
-
-
-                    except Exception as exc:
-                        tool_res = "工具执行失败"
-                        content = f"\n❌ 工具执行失败: {str(exc)}"
-                        chat_content += content
-                        st.write(content)
-                    # 更新工具调用结果
-                    resp["cmdInfo"][idx]["res"] = tool_res
-
-            # 更新用户输入，准备下一轮规划
-            body["current"]["response"].append(resp)
-
-            # 更新Agent规划迭代次数
-            num_iteration += 1
-
-        if num_iteration >= max_iterations:
-            content = "-" * 3
-            chat_content += content
-            st.write(content)
-            content = f"❗❗ 达到最大迭代次数!"
-            chat_content += content
-            st.write_stream(stream(content))
-            body["current"]["response"].append({"content": "达到最大迭代次数！强制进行总结！", "cmdInfo": []})
-            resp = flash_agent_planner.plan(body)
-
-        content = "-" * 3
-        chat_content += content
-        st.write(content)
-
-        content = resp["content"]
-        chat_content += content
-        st.write_stream(stream(content))
-
-        content = "-" * 3
-        chat_content += content
-        st.write(content)
-
-    # 将完整响应添加到会话历史
-    st.session_state.messages.append({"role": "assistant", "content": chat_content})
-    
-    current_copy = body['current'].copy()
-    body['history'].append(current_copy)
-    st.session_state.agent_history = body['history']  # 更新session_state中的历史
+            # 不断从队列中获取输出并显示
+            while query_thread.is_alive() or not output_stream.output_queue.empty():
+                try:
+                    new_output = output_stream.output_queue.get(block=True, timeout=0.1)
+                    process_content += new_output
+                    process_placeholder.code(process_content)
+                except queue.Empty:
+                    pass
+                
+                # 给UI一些时间来更新
+                time.sleep(0.01)
+            
+            # 显示过程完成
+            process_content += "\n处理完成！\n"
+            process_placeholder.code(process_content)
+            
+            # 等待线程完成
+            query_thread.join()
+            
+            # 更新状态
+            status_placeholder.write("🔍 检索完成！正在生成最终答案...")
+            
+            # 添加最终答案的分隔符
+            process_content += "\n" + "=" * 40 + "\n✅ 最终答案:\n" + "=" * 40 + "\n\n"
+            process_placeholder.code(process_content)
+            
+            # 流式显示最终答案
+            response = ""
+            for char in final_results["answer"]:
+                response += char
+                message_placeholder.markdown(response + "▌")  # 模拟光标
+                time.sleep(0.005)  # 减少延迟，加快显示速度
+            
+            # 最终显示完整答案
+            message_placeholder.markdown(response)
+            
+            # 更新状态
+            status_placeholder.write("✅ 回答完成！可查看下方检索结果")
+            
+            # 格式化检索到的文档
+            grouped_results = format_retrieved_docs(final_results["docs"])
+            
+            # 使用expander显示检索详细结果（放在答案下方）
+            with retrieval_placeholder.container():
+                with st.expander("📚 查看召回详细结果", expanded=False):
+                    if grouped_results:
+                        sorted_docs = list(grouped_results.keys())
+                        for doc_idx, doc in enumerate(sorted_docs):
+                            results_for_doc = grouped_results[doc]
+                            st.markdown(f"### 📄 {doc}")
+                            for i, result in enumerate(results_for_doc):
+                                st.markdown(f"**片段 {i+1}**")
+                                st.markdown(f"```\n{result['内容']}\n```")
+                            if doc_idx < len(sorted_docs) - 1:
+                                st.markdown("---")
+                    else:
+                        st.info("未检索到相关文档")
+            
+            # 将完整响应添加到会话历史
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            
+        except Exception as e:
+            error_msg = f"处理中发生错误: {str(e)}"
+            process_placeholder.error(error_msg)
+            message_placeholder.error("生成回答失败，请重试")
+            st.session_state.messages.append({"role": "assistant", "content": f"错误: {error_msg}"})
 
 
 def flash_llm_chat(question: str):
-    """"""
+    """普通对话模式，使用OpenAI API直接流式输出"""
     st.session_state.messages.append({"role": "user", "content": question})
 
     with st.chat_message("user"):
         st.write(question)
 
-    # 创建占位符用于流式输出
+    # 创建用于流式输出的聊天消息
     with st.chat_message("assistant"):
-        message_placeholder = st.empty()
+        # 创建消息历史
+        messages = [
+            {"role": "system", "content": system_prompt}
+        ]
+        
+        # 添加历史消息(最多保留5轮对话)
+        history_messages = []
+        for msg in st.session_state.messages[-10:]:  # 限制历史消息数量
+            if msg["role"] != "system":  # 跳过系统消息
+                history_messages.append({"role": msg["role"], "content": msg["content"]})
+        
+        # 添加历史消息
+        messages.extend(history_messages)
+        
+        # 初始化OpenAI客户端
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
+        # 创建流式文本生成占位符
+        placeholder = st.empty()
         full_response = ""
-
-        # 调用流式生成函数并流式显示结果
+        
         try:
-            # 流式生成并显示
-            caller.model = selected_model
-            for response_chunk in caller.chat_stream(
-                messages=st.session_state.messages,
+            # 直接使用OpenAI API进行流式生成
+            stream = client.chat.completions.create(
+                model=selected_model,
+                messages=messages,
                 temperature=temperature,
-                max_tokens=max_tokens
-            ):
-                full_response += response_chunk
-                message_placeholder.markdown(full_response + "▌")  # 模拟光标
-
-            # 完成后显示完整响应
-            message_placeholder.markdown(full_response)
+                max_tokens=max_tokens,
+                stream=True
+            )
+            
+            # 处理流式响应
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    content = chunk.choices[0].delta.content
+                    full_response += content
+                    # 实时更新UI
+                    placeholder.markdown(full_response + "▌")  # 模拟光标
+            
+            # 显示完整响应
+            placeholder.markdown(full_response)
+            
         except Exception as e:
             st.error(f"生成回答时出错: {str(e)}")
             full_response = f"很抱歉，生成回答时出现错误: {str(e)}"
-            message_placeholder.markdown(full_response)
+            placeholder.markdown(full_response)
 
     # 将完整响应添加到会话历史
     st.session_state.messages.append({"role": "assistant", "content": full_response})
@@ -258,13 +306,14 @@ if "messages" not in st.session_state:
 
 # 显示历史消息
 for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
 
 # 用户输入
 if question := st.chat_input("输入您的问题..."):
     # 添加用户消息到历史
-    if not agent_flag:
-        flash_llm_chat(question)
+    if deep_search_flag:
+        flash_deep_search_workflow(question)
     else:
-        flash_agent_workflow(question)
+        flash_llm_chat(question)

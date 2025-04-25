@@ -1,272 +1,274 @@
-INFO:     Started server process [64298]
+INFO:     Started server process [73723]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:17724 (Press CTRL+C to quit)
-2025-04-25 11:32:02.050 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询:  ---
-2025-04-25 11:32:02.051 | INFO     | services.pipeline:process_uploaded_file:82 - 处理上传的文件: /Users/evan/Desktop/work/wind/FlashC/manusRAG/temp_uploads/5a306e91-daac-4dec-9e9a-eb9776eb8706_传统RAG搜索与broswer_use搜索比较.md
-2025-04-25 11:32:02.051 | INFO     | services.pipeline:process_uploaded_file:101 - 成功从文件中提取文本，长度: 11364
-2025-04-25 11:32:02.051 | INFO     | services.pipeline:run_pipeline:303 - 处理提取的文本
-2025-04-25 11:32:02.051 | INFO     | services.pipeline:chunk_text:118 - === 运行文本分块 ===
-2025-04-25 11:32:02.053 | INFO     | services.pipeline:chunk_text:142 - 分块成功: 共71块
-2025-04-25 11:32:02.053 | INFO     | services.pipeline:ingest_text:151 - === 运行文本导入 ===
-Open /Users/evan/Desktop/work/wind/FlashC/manusRAG/database/milvus/milvus_db/milvus_db.db failed, the file has been opened by another program
-2025-04-25 11:32:02,095 [ERROR][_create_connection]: Failed to create new connection using: 3d58f447b3e14dd3a1039cf933b8bc66 (milvus_client.py:923)
-2025-04-25 11:32:03.622 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 11:32:03.743 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1745551923.746752 13218517 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
-Ingesting batch data into Milvus:   0%|          | 0/3 [00:00<?, ?it/s]I0000 00:00:1745551923.810263 13218517 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
-I0000 00:00:1745551923.820050 13218517 fork_posix.cc:77] Other threads are currently calling into gRPC, skipping fork() handlers
-2025-04-25 11:32:06.222 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection logseq_collection
-Ingesting batch data into Milvus:  33%|███▎      | 1/3 [00:02<00:04,  2.47s/it]2025-04-25 11:32:07.298 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 32 records into collection logseq_collection
-Ingesting batch data into Milvus:  67%|██████▋   | 2/3 [00:03<00:01,  1.65s/it]2025-04-25 11:32:08.211 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 7 records into collection logseq_collection
-Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:04<00:00,  1.31s/it]Ingesting batch data into Milvus: 100%|██████████| 3/3 [00:04<00:00,  1.49s/it]
-2025-04-25 11:32:08.211 | INFO     | services.pipeline:ingest_text:177 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 71 text chunks into database.', 'ingest_return': '[{"insert_count": 32, "ids": [457585964144132096, 457585964144132097, 457585964144132098, 457585964144132099, 457585964144132100, 457585964144132101, 457585964144132102, 457585964144132103, 457585964144132104, 457585964144132105, 457585964144132106, 457585964144132107, 457585964144132108, 457585964144132109, 457585964144132110, 457585964144132111, 457585964144132112, 457585964144132113, 457585964144132114, 457585964144132115, 457585964144132116, 457585964144132117, 457585964144132118, 457585964144132119, 457585964144132120, 457585964144132121, 457585964144132122, 457585964144132123, 457585964144132124, 457585964144132125, 457585964144132126, 457585964144132127], "cost": 0}, {"insert_count": 32, "ids": [457585964428558400, 457585964428558401, 457585964428558402, 457585964428558403, 457585964428558404, 457585964428558405, 457585964428558406, 457585964428558407, 457585964428558408, 457585964428558409, 457585964428558410, 457585964428558411, 457585964428558412, 457585964428558413, 457585964428558414, 457585964428558415, 457585964428558416, 457585964428558417, 457585964428558418, 457585964428558419, 457585964428558420, 457585964428558421, 457585964428558422, 457585964428558423, 457585964428558424, 457585964428558425, 457585964428558426, 457585964428558427, 457585964428558428, 457585964428558429, 457585964428558430, 457585964428558431], "cost": 0}, {"insert_count": 7, "ids": [457585964668158080, 457585964668158081, 457585964668158082, 457585964668158083, 457585964668158084, 457585964668158085, 457585964668158086], "cost": 0}]', 'time_taken': 4.468609094619751}
-2025-04-25 11:32:08.212 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:65145 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 11:32:37.312 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 传统RAG与broswer use有什么区别 ---
-2025-04-25 11:32:37.312 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 传统RAG与broswer use有什么区别 ===
-2025-04-25 11:32:37.313 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 11:32:37.314 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 11:32:38.230 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 11:32:38.230 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 11:32:43.951 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 11:32:43.951 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:65197 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 13:38:18.142 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 数据库里面有search-r1相关文档吗 ---
-2025-04-25 13:38:18.143 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 数据库里面有search-r1相关文档吗 ===
-2025-04-25 13:38:18.187 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 13:38:18.191 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 13:38:19.395 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 13:38:19.396 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 13:38:26.289 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 13:38:26.289 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:51890 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 13:38:48.775 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: search-r1的细节有吗 ---
-2025-04-25 13:38:48.775 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: search-r1的细节有吗 ===
-2025-04-25 13:38:48.776 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 13:38:48.777 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 13:38:49.361 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 13:38:49.361 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 13:38:54.592 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 13:38:54.592 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:51925 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 13:40:08.835 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询:  ---
-2025-04-25 13:40:08.835 | INFO     | services.pipeline:process_uploaded_file:82 - 处理上传的文件: /Users/evan/Documents/logseq/pages/Search-R1%3A Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning.md
-2025-04-25 13:40:08.836 | INFO     | services.pipeline:process_uploaded_file:101 - 成功从文件中提取文本，长度: 182
-2025-04-25 13:40:08.836 | INFO     | services.pipeline:run_pipeline:303 - 处理提取的文本
-2025-04-25 13:40:08.836 | INFO     | services.pipeline:chunk_text:118 - === 运行文本分块 ===
-2025-04-25 13:40:08.837 | INFO     | services.pipeline:chunk_text:142 - 分块成功: 共1块
-2025-04-25 13:40:08.837 | INFO     | services.pipeline:ingest_text:151 - === 运行文本导入 ===
-2025-04-25 13:40:08.842 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 13:40:08.844 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 13:40:09.854 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 1 records into collection logseq_collection
-2025-04-25 13:40:09.854 | INFO     | services.pipeline:ingest_text:177 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 1 text chunks into database.', 'ingest_return': '[{"insert_count": 1, "ids": [457587978363994254], "cost": 0}]', 'time_taken': 1.0099589824676514}
-2025-04-25 13:40:09.854 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:51998 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询:  ---
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:process_uploaded_file:82 - 处理上传的文件: /Users/evan/Documents/logseq/pages/git.md
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:process_uploaded_file:101 - 成功从文件中提取文本，长度: 96
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:run_pipeline:303 - 处理提取的文本
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:chunk_text:118 - === 运行文本分块 ===
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:chunk_text:142 - 分块成功: 共1块
-2025-04-25 13:40:09.857 | INFO     | services.pipeline:ingest_text:151 - === 运行文本导入 ===
-2025-04-25 13:40:09.861 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 13:40:09.861 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 13:40:10.659 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 1 records into collection logseq_collection
-2025-04-25 13:40:10.659 | INFO     | services.pipeline:ingest_text:177 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 1 text chunks into database.', 'ingest_return': '[{"insert_count": 1, "ids": [457587978576068752], "cost": 0}]', 'time_taken': 0.7979118824005127}
-2025-04-25 13:40:10.660 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:52001 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 13:40:10.665 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询:  ---
-2025-04-25 13:40:10.665 | INFO     | services.pipeline:process_uploaded_file:82 - 处理上传的文件: /Users/evan/Documents/logseq/pages/Wind.md
-2025-04-25 13:40:10.666 | INFO     | services.pipeline:process_uploaded_file:101 - 成功从文件中提取文本，长度: 4288
-2025-04-25 13:40:10.666 | INFO     | services.pipeline:run_pipeline:303 - 处理提取的文本
-2025-04-25 13:40:10.666 | INFO     | services.pipeline:chunk_text:118 - === 运行文本分块 ===
-2025-04-25 13:40:10.667 | INFO     | services.pipeline:chunk_text:142 - 分块成功: 共26块
-2025-04-25 13:40:10.667 | INFO     | services.pipeline:ingest_text:151 - === 运行文本导入 ===
-2025-04-25 13:40:10.672 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 13:40:10.673 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 13:40:11.808 | INFO     | database.milvus.milvusManager:_ingest_batch:196 - Successfully inserted 26 records into collection logseq_collection
-2025-04-25 13:40:11.808 | INFO     | services.pipeline:ingest_text:177 - 成功导入到 milvus: {'status': 'success', 'message': 'Successfully ingested 26 text chunks into database.', 'ingest_return': '[{"insert_count": 26, "ids": [457587978876747922, 457587978876747923, 457587978876747924, 457587978876747925, 457587978876747926, 457587978876747927, 457587978876747928, 457587978876747929, 457587978876747930, 457587978876747931, 457587978876747932, 457587978876747933, 457587978876747934, 457587978876747935, 457587978876747936, 457587978876747937, 457587978876747938, 457587978876747939, 457587978876747940, 457587978876747941, 457587978876747942, 457587978876747943, 457587978876747944, 457587978876747945, 457587978876747946, 457587978876747947], "cost": 0}]', 'time_taken': 1.134716272354126}
-2025-04-25 13:40:11.808 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:52004 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:42:33.887 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 中国2023GDP ---
-2025-04-25 17:42:33.888 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 中国2023GDP ===
-2025-04-25 17:42:33.915 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:42:33.917 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:42:35.117 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:42:35.117 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:42:43.647 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 17:42:43.647 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:52244 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:45:03.407 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 中国2023GDP ---
-2025-04-25 17:45:03.407 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 中国2023GDP ===
-2025-04-25 17:45:03.408 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:45:03.409 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:45:04.228 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:45:04.228 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:45:10.859 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 17:45:10.859 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:52427 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:48:35.877 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 中国2023GDP ---
-2025-04-25 17:48:35.877 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 中国2023GDP ===
-2025-04-25 17:48:35.880 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:48:35.881 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:48:36.406 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:48:36.406 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:48:43.242 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 10
-2025-04-25 17:48:43.242 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:52689 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:57:34.173 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 什么是RAG？ ---
-2025-04-25 17:57:34.173 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 什么是RAG？ ===
-2025-04-25 17:57:34.183 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:57:34.185 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:57:34.922 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:57:34.922 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:57:40.479 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:57:40.479 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53354 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:57:43.234 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG的原理是什么？ ---
-2025-04-25 17:57:43.234 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG的原理是什么？ ===
-2025-04-25 17:57:43.238 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:57:43.239 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:57:44.071 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:57:44.071 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:57:49.079 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:57:49.079 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53365 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:57:51.719 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG与openmanus有什么联系？ ---
-2025-04-25 17:57:51.719 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG与openmanus有什么联系？ ===
-2025-04-25 17:57:51.723 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:57:51.724 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:57:52.277 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:57:52.277 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:57:55.923 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:57:55.923 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53381 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:57:59.281 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG与openmanus有什么区别？ ---
-2025-04-25 17:57:59.282 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG与openmanus有什么区别？ ===
-2025-04-25 17:57:59.286 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:57:59.287 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:00.091 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:00.091 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:03.433 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:03.433 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53391 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:07.332 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG的应用场景有哪些？ ---
-2025-04-25 17:58:07.332 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG的应用场景有哪些？ ===
-2025-04-25 17:58:07.335 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:07.337 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:08.172 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:08.173 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:13.150 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:13.150 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53399 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:15.832 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: openmanus的功能和特点是什么？ ---
-2025-04-25 17:58:15.832 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: openmanus的功能和特点是什么？ ===
-2025-04-25 17:58:15.839 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:15.841 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:16.621 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:16.621 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:19.972 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:19.972 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53411 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:23.000 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG与其他生成模型的比较 ---
-2025-04-25 17:58:23.001 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG与其他生成模型的比较 ===
-2025-04-25 17:58:23.004 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:23.005 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:23.726 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:23.726 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:28.697 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:28.697 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53418 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:33.112 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG的最新研究进展 ---
-2025-04-25 17:58:33.113 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG的最新研究进展 ===
-2025-04-25 17:58:33.117 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:33.118 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:33.760 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:33.761 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:38.638 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:38.638 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53432 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:41.655 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: openmanus的未来发展方向 ---
-2025-04-25 17:58:41.655 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: openmanus的未来发展方向 ===
-2025-04-25 17:58:41.657 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:41.658 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:42.697 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:42.697 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:45.927 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:45.927 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53442 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 17:58:48.981 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: RAG在特定领域的应用案例 ---
-2025-04-25 17:58:48.981 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: RAG在特定领域的应用案例 ===
-2025-04-25 17:58:48.987 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 17:58:48.989 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 17:58:49.630 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 17:58:49.630 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 17:58:54.563 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 17:58:54.563 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:53454 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:12:59.971 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 什么是DeepSeek-R1？ ---
-2025-04-25 18:12:59.972 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 什么是DeepSeek-R1？ ===
-2025-04-25 18:12:59.979 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:12:59.980 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:00.719 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:00.719 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:13:08.222 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:13:08.222 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54304 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:13:12.359 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Agents框架的基本概念是什么？ ---
-2025-04-25 18:13:12.360 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Agents框架的基本概念是什么？ ===
-2025-04-25 18:13:12.364 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:13:12.366 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:13.083 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:13.084 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:13:19.143 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:13:19.143 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54328 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:13:22.803 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: DeepSeek-R1与Agents框架结合的具体应用场景有哪些？ ---
-2025-04-25 18:13:22.803 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: DeepSeek-R1与Agents框架结合的具体应用场景有哪些？ ===
-2025-04-25 18:13:22.806 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:13:22.807 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:23.422 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:23.422 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:13:29.240 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:13:29.240 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54342 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:13:33.409 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 如何评估DeepSeek-R1与Agents框架结合的效率？ ---
-2025-04-25 18:13:33.409 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 如何评估DeepSeek-R1与Agents框架结合的效率？ ===
-2025-04-25 18:13:33.412 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:13:33.414 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:34.289 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:34.290 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:13:41.908 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:13:41.908 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54368 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:13:46.750 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: DeepSeek-R1与Agents框架结合的未来发展方向是什么？ ---
-2025-04-25 18:13:46.751 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: DeepSeek-R1与Agents框架结合的未来发展方向是什么？ ===
-2025-04-25 18:13:46.778 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:13:46.781 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:47.369 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:47.369 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:13:53.719 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:13:53.719 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54395 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:13:57.111 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: DeepSeek-R1在其他框架中的应用效果如何？ ---
-2025-04-25 18:13:57.111 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: DeepSeek-R1在其他框架中的应用效果如何？ ===
-2025-04-25 18:13:57.116 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:13:57.118 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:13:57.898 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:13:57.898 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:14:03.880 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:14:03.881 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54416 - "POST /pipeline HTTP/1.1" 200 OK
-2025-04-25 18:14:07.642 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 如何优化DeepSeek-R1与Agents框架结合的效率？ ---
-2025-04-25 18:14:07.643 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 如何优化DeepSeek-R1与Agents框架结合的效率？ ===
-2025-04-25 18:14:07.647 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
-2025-04-25 18:14:07.649 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
-2025-04-25 18:14:08.462 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
-2025-04-25 18:14:08.462 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
-2025-04-25 18:14:14.426 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
-2025-04-25 18:14:14.426 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
-INFO:     127.0.0.1:54425 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 22:56:40.884 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的最高学历是什么？ ---
+2025-04-25 22:56:40.884 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的最高学历是什么？ ===
+2025-04-25 22:56:41.480 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 22:56:41.626 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 22:56:42.786 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 22:56:42.786 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 22:56:48.303 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 22:56:48.303 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:51509 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 22:56:52.232 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在哪些学校就读过？ ---
+2025-04-25 22:56:52.233 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在哪些学校就读过？ ===
+2025-04-25 22:56:52.236 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 22:56:52.238 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 22:56:53.577 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 22:56:53.577 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 22:56:58.554 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 22:56:58.554 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:51542 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 22:57:01.974 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的专业是什么？ ---
+2025-04-25 22:57:01.974 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的专业是什么？ ===
+2025-04-25 22:57:01.976 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 22:57:01.976 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 22:57:04.561 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 22:57:04.561 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 22:57:09.336 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 22:57:09.336 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:51586 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 22:57:12.987 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel是否有任何特别的学术成就或荣誉？ ---
+2025-04-25 22:57:12.987 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel是否有任何特别的学术成就或荣誉？ ===
+2025-04-25 22:57:12.999 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 22:57:13.001 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 22:57:13.733 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 22:57:13.733 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 22:57:18.590 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 22:57:18.590 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:51635 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:05:54.721 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的实习经历有哪些具体的公司或机构？ ---
+2025-04-25 23:05:54.722 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的实习经历有哪些具体的公司或机构？ ===
+2025-04-25 23:05:54.729 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:05:54.731 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:05:55.771 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:05:55.771 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:06:01.611 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:06:01.612 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53072 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:06:05.312 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在实习期间负责哪些具体的工作或项目？ ---
+2025-04-25 23:06:05.313 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在实习期间负责哪些具体的工作或项目？ ===
+2025-04-25 23:06:05.316 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:06:05.318 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:06:06.023 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:06:06.024 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:06:11.072 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:06:11.072 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53098 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:06:15.156 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在实习中获得了哪些技能或经验？ ---
+2025-04-25 23:06:15.156 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在实习中获得了哪些技能或经验？ ===
+2025-04-25 23:06:15.162 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:06:15.164 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:06:16.321 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:06:16.321 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:06:21.457 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:06:21.457 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53161 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:06:25.375 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel对她的实习经历有什么评价或感受？ ---
+2025-04-25 23:06:25.375 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel对她的实习经历有什么评价或感受？ ===
+2025-04-25 23:06:25.380 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:06:25.382 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:06:26.628 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:06:26.628 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:06:31.475 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:06:31.475 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:53229 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:10:46.038 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的项目经验包括哪些具体项目？ ---
+2025-04-25 23:10:46.039 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的项目经验包括哪些具体项目？ ===
+2025-04-25 23:10:46.058 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:10:46.059 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:10:46.846 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:10:46.846 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:10:52.288 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:10:52.288 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54155 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:10:57.603 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在这些项目中担任了什么角色？ ---
+2025-04-25 23:10:57.604 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在这些项目中担任了什么角色？ ===
+2025-04-25 23:10:57.607 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:10:57.608 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:10:59.084 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:10:59.084 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:11:03.542 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:11:03.542 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54173 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:11:08.208 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在项目中取得了哪些成就或成果？ ---
+2025-04-25 23:11:08.209 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在项目中取得了哪些成就或成果？ ===
+2025-04-25 23:11:08.214 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:11:08.216 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:11:09.006 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:11:09.006 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:11:14.715 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:11:14.715 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54195 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:11:18.633 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的项目经验与她的职业目标有何关联？ ---
+2025-04-25 23:11:18.633 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的项目经验与她的职业目标有何关联？ ===
+2025-04-25 23:11:18.640 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:11:18.642 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:11:19.608 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:11:19.608 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:11:24.315 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:11:24.315 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:54214 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:21:01.980 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的教育背景是什么？ ---
+2025-04-25 23:21:01.981 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的教育背景是什么？ ===
+2025-04-25 23:21:02.019 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:21:02.021 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:21:03.229 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:21:03.229 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:21:08.674 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:21:08.674 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55551 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:21:12.830 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的学历水平如何？ ---
+2025-04-25 23:21:12.831 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的学历水平如何？ ===
+2025-04-25 23:21:12.834 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:21:12.835 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:21:13.688 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:21:13.688 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:21:18.146 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:21:18.146 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55574 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:21:22.455 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel在哪些学校学习过？ ---
+2025-04-25 23:21:22.455 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel在哪些学校学习过？ ===
+2025-04-25 23:21:22.458 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:21:22.459 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:21:23.823 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:21:23.823 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:21:28.813 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:21:28.813 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55600 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:21:32.835 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的专业是什么？ ---
+2025-04-25 23:21:32.835 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的专业是什么？ ===
+2025-04-25 23:21:32.839 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:21:32.840 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:21:33.542 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:21:33.542 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:21:38.257 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:21:38.257 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55609 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:24:46.760 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的学历是什么？ ---
+2025-04-25 23:24:46.760 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的学历是什么？ ===
+2025-04-25 23:24:46.768 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:24:46.770 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:24:47.841 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:24:47.841 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:24:53.078 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:24:53.078 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55919 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:24:56.970 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的专业是什么？ ---
+2025-04-25 23:24:56.971 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的专业是什么？ ===
+2025-04-25 23:24:56.975 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:24:56.976 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:24:58.347 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:24:58.347 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:25:02.945 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:25:02.945 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55930 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:25:11.286 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的教育背景包括哪些学校或机构？ ---
+2025-04-25 23:25:11.287 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的教育背景包括哪些学校或机构？ ===
+2025-04-25 23:25:11.290 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:25:11.291 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:25:12.211 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:25:12.211 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:25:17.355 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:25:17.355 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55947 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:25:21.459 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: Rachel的学历对她的职业发展有什么影响？ ---
+2025-04-25 23:25:21.459 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: Rachel的学历对她的职业发展有什么影响？ ===
+2025-04-25 23:25:21.621 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:25:21.622 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:25:22.700 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:25:22.701 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:25:27.236 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:25:27.236 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:55960 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:26:34.986 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 我做了哪些与open-r1相关的实验？ ---
+2025-04-25 23:26:34.987 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 我做了哪些与open-r1相关的实验？ ===
+2025-04-25 23:26:34.992 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:26:34.993 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:26:36.048 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:26:36.051 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:26:41.267 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:26:41.267 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56024 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:26:45.382 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 这些实验的具体步骤是什么？ ---
+2025-04-25 23:26:45.382 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 这些实验的具体步骤是什么？ ===
+2025-04-25 23:26:45.385 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:26:45.387 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:26:46.173 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:26:46.173 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:26:51.987 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:26:51.987 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56059 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:26:56.521 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 每个实验的结果是什么？ ---
+2025-04-25 23:26:56.521 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 每个实验的结果是什么？ ===
+2025-04-25 23:26:56.541 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:26:56.544 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:26:57.852 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:26:57.852 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:27:04.204 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:27:04.204 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56075 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:27:08.225 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: 这些实验的结论是什么？ ---
+2025-04-25 23:27:08.226 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: 这些实验的结论是什么？ ===
+2025-04-25 23:27:08.240 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:27:08.241 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:27:08.907 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:27:08.907 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:27:15.960 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:27:15.960 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56090 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:27:21.304 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1实验的具体结论是什么？ ---
+2025-04-25 23:27:21.304 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1实验的具体结论是什么？ ===
+2025-04-25 23:27:21.311 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:27:21.313 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:27:22.224 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:27:22.225 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:27:28.009 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:27:28.010 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56210 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:27:32.201 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1相关实验的影响因素有哪些？ ---
+2025-04-25 23:27:32.202 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1相关实验的影响因素有哪些？ ===
+2025-04-25 23:27:32.204 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:27:32.205 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:27:32.892 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:27:32.892 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:27:37.990 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:27:37.991 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56272 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:27:41.720 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1实验中使用的数据集有哪些？ ---
+2025-04-25 23:27:41.721 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1实验中使用的数据集有哪些？ ===
+2025-04-25 23:27:41.726 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:27:41.728 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:27:44.068 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:27:44.068 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:27:48.594 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:27:48.594 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56319 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:27:54.741 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1实验的最佳实践和建议是什么？ ---
+2025-04-25 23:27:54.741 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1实验的最佳实践和建议是什么？ ===
+2025-04-25 23:27:54.745 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:27:54.747 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:27:55.490 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:27:55.490 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:28:00.244 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:28:00.244 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56356 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:28:03.830 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1实验中使用的模型和参数设置有哪些？ ---
+2025-04-25 23:28:03.830 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1实验中使用的模型和参数设置有哪些？ ===
+2025-04-25 23:28:03.833 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:28:03.835 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:28:04.574 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:28:04.574 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:28:09.267 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:28:09.267 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56378 - "POST /pipeline HTTP/1.1" 200 OK
+2025-04-25 23:28:12.806 | INFO     | services.pipeline:run_pipeline:285 - --- 开始RAG流程，查询: open-r1实验的后续研究方向和改进建议是什么？ ---
+2025-04-25 23:28:12.807 | INFO     | services.pipeline:retrieval:187 - === 运行检索，查询: open-r1实验的后续研究方向和改进建议是什么？ ===
+2025-04-25 23:28:12.814 | INFO     | database.milvus.milvusManager:__init__:54 - Using Milvus Lite with local database file: /Users/evan/Desktop/work/wind/FlashC/manusRAG/services/../database/milvus/milvus_db/milvus_db.db
+2025-04-25 23:28:12.815 | INFO     | database.milvus.milvusManager:__init__:66 - Successfully connected to collection: logseq_collection
+2025-04-25 23:28:13.964 | INFO     | services.pipeline:retrieval:211 - 从 milvus 检索到 100 条结果
+2025-04-25 23:28:13.964 | INFO     | services.pipeline:rerank:221 - === 运行重排序 ===
+2025-04-25 23:28:19.125 | INFO     | services.pipeline:rerank:244 - 重排序结果数量: 5
+2025-04-25 23:28:19.125 | INFO     | services.pipeline:run_pipeline:358 - --- RAG流程完成 ---
+INFO:     127.0.0.1:56397 - "POST /pipeline HTTP/1.1" 200 OK
