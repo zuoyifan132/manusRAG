@@ -3,6 +3,7 @@ import json
 import uuid
 from typing import Dict, List, Optional, Any, Union, Tuple
 from pydantic import BaseModel, Field
+from tenacity import RetryError
 from tqdm import tqdm
 from loguru import logger
 
@@ -174,7 +175,7 @@ def ingest_text(config: List[IngestTextConfig], chunks: List[Dict]) -> bool:
             # 直接调用service.py中的函数
             result = process_ingest_text(request)
             logger.info(f"成功导入到 {db_type}: {result}")
-        except Exception as e:
+        except RetryError as e:
             logger.error(f"导入到 {db_type} 时错误: {str(e)}")
             success = False
             
@@ -209,7 +210,7 @@ def retrieval(config: List[RetrievalConfig], query: str) -> List[Dict]:
             results = result.get("results", [])
             logger.info(f"从 {db_type} 检索到 {len(results)} 条结果")
             all_results.extend(results)
-        except Exception as e:
+        except RetryError as e:
             logger.error(f"从 {db_type} 检索时错误: {str(e)}")
     
     return all_results

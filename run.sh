@@ -12,35 +12,55 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# 定义端口监控函数
+wait_for_port() {
+    local port=$1
+    local service_name=$2
+    local max_attempts=$3
+    local log_file=$4
+    
+    echo -e "${BLUE}[INFO]${NC} 等待 $service_name 服务在端口 $port 上启动..."
+    
+    local attempt=1
+    while [ $attempt -le $max_attempts ]; do
+        if lsof -i:$port -t &> /dev/null; then
+            echo -e "${GREEN}[SUCCESS]${NC} $service_name 服务已成功启动在端口 $port"
+            return 0
+        fi
+        
+        echo -e "${YELLOW}[WAITING]${NC} $service_name 服务启动中... (尝试 $attempt/$max_attempts)"
+        sleep 3
+        ((attempt++))
+    done
+    
+    echo -e "${RED}[ERROR]${NC} $service_name 服务在 $max_attempts 次尝试后仍未启动"
+    if [ ! -z "$log_file" ]; then
+        echo -e "${RED}[ERROR]${NC} 检查日志文件: $log_file"
+    fi
+    
+    # 返回失败状态但继续执行脚本
+    return 1
+}
+
 # 启动 reranker 服务
 echo -e "${BLUE}[INFO]${NC} 正在启动 Reranker 服务..."
 cd $BASE_DIR/utils/bge_reranker_v2_m3
 bash run_reranker.sh
-sleep 10
 
-# 检查 reranker 服务是否成功启动
+# 等待 reranker 服务启动
 RERANKER_PORT=12212
-if lsof -i:$RERANKER_PORT -t &> /dev/null; then
-    echo -e "${GREEN}[SUCCESS]${NC} Reranker 服务已成功启动"
-else
-    echo -e "${RED}[ERROR]${NC} Reranker 服务启动失败"
-fi
+wait_for_port $RERANKER_PORT "Reranker" 20 "$BASE_DIR/utils/bge_reranker_v2_m3/reranker_service.log"
 echo "====================================================="
 
 # 启动 minerU 服务
 echo -e "${BLUE}[INFO]${NC} 正在启动 MinerU 服务..."
 cd $BASE_DIR/utils/minerU_app
 bash run_minerU_app.sh
-sleep 10
 
-# 检查 minerU 服务是否成功启动
+# 等待 minerU 服务启动
 MINERU_PORT=8888
-if lsof -i:$MINERU_PORT -t &> /dev/null; then
-    echo -e "${GREEN}[SUCCESS]${NC} MinerU 服务已成功启动"
-else
-    echo -e "${YELLOW}[WARNING]${NC} MinerU 服务启动失败或未监听端口 $MINERU_PORT"
-    echo -e "${YELLOW}[WARNING]${NC} 检查日志文件: $BASE_DIR/utils/minerU_app/minerU_app.log"
-    # 即使 minerU 启动失败，我们仍然继续执行后续步骤
+if ! wait_for_port $MINERU_PORT "MinerU" 20 "$BASE_DIR/utils/minerU_app/minerU_app.log"; then
+    echo -e "${YELLOW}[WARNING]${NC} MinerU 服务启动失败或未监听端口 $MINERU_PORT，但将继续执行后续步骤"
 fi
 echo "====================================================="
 
@@ -48,16 +68,10 @@ echo "====================================================="
 echo -e "${BLUE}[INFO]${NC} 正在启动 RAG 服务..."
 cd $BASE_DIR/services
 bash run_rag_service.sh
-sleep 10
 
-# 检查 RAG 服务是否成功启动
+# 等待 RAG 服务启动
 RAG_PORT=17724
-if lsof -i:$RAG_PORT -t &> /dev/null; then
-    echo -e "${GREEN}[SUCCESS]${NC} RAG 服务已成功启动"
-else
-    echo -e "${RED}[ERROR]${NC} RAG 服务启动失败"
-    echo -e "${RED}[ERROR]${NC} 检查日志文件: $BASE_DIR/services/service.log"
-fi
+wait_for_port $RAG_PORT "RAG" 20 "$BASE_DIR/services/service.log"
 echo "====================================================="
 
 # 启动 WebUI

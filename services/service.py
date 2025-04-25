@@ -1,13 +1,15 @@
 import json
 import uuid
 import os
-import sys
 import time
 from loguru import logger
-from typing import Type, Any, List, Dict, Optional, Union, Literal, Tuple
-from pydantic import BaseModel, Field
-from tenacity import retry, stop_after_attempt, wait_fixed, RetryError
-from services.config import MILVUS_RETRY_WAIT_TIME, MILVUS_RETRY_TIMES
+from typing import Type, List, Dict, Optional, Union, Literal, Tuple
+from pydantic import BaseModel
+from tenacity import RetryError, retry, stop_after_attempt, wait_fixed
+from services.config import (
+    MILVUS_RETRY_WAIT_TIME, 
+    MILVUS_RETRY_TIMES
+)
 from parser.PDFParser import (
     PDFParser, 
     PyPDF2Parser,
@@ -22,7 +24,7 @@ from parser.WordParser import (
     DocxParser
 )
 from services.config import allowed_ips
-from chunking.baseChunker import BaseChunker, Document
+from chunking.baseChunker import Document
 from chunking.textChunker import PunctuationChunker, RecursiveChunker
 from chunking.codeChunker import PythonChunker
 from chunking.htmlChunker import HTMLChunker
@@ -397,22 +399,28 @@ def process_ingest_text(request: IngestRequest) -> Dict:
         documents.append(Document(chunk=chunk, metadata=metadata))
 
     # ingest the data
+    status = "success"
     start_time = time.time()
-    ingest_return = ingest_instance.ingest(
-        texts_with_metadata=documents, 
-        batch_size_limit=batch_size_limit,
-        **expand_fields_values
-    )
+    try:
+        ingest_return = ingest_instance.ingest(
+            texts_with_metadata=documents, 
+            batch_size_limit=batch_size_limit,
+            **expand_fields_values
+        )
+    except Exception as e:
+        logger.error(f"Error occurred during the ingestion process: {str(e)}")
+        status = "failed"
+        raise
     end_time = time.time()
 
     return {
-        "status": "success",
+        "status": status,
         "message": f"Successfully ingested {len(chunks_with_metadata)} text chunks into database.",
         "ingest_return": json.dumps(ingest_return),
         "time_taken": end_time - start_time
     }
 
-
+@retry(stop=stop_after_attempt(MILVUS_RETRY_TIMES), wait=wait_fixed(MILVUS_RETRY_WAIT_TIME))
 def process_search_text(request: SearchRequest) -> Dict:
     """
     Search for similar text in the database.
@@ -445,12 +453,18 @@ def process_search_text(request: SearchRequest) -> Dict:
         search_params.update({"filter": filter})
 
     # search the data
+    status = "success"
     start_time = time.time()
-    results = search_instance.search(**search_params)
+    try:
+        results = search_instance.search(**search_params)
+    except Exception as e:
+        logger.error(f"Error occurred during the search process: {str(e)}")
+        status = "failed"
+        raise
     end_time = time.time()
 
     return {
-        "status": "success",
+        "status": status,
         "query": query,
         "results": results,
         "time_taken": end_time - start_time

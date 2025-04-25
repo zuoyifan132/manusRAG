@@ -34,12 +34,12 @@ DEFAULT_INGEST_CONFIG = os.environ.get(
 # 默认监控目录
 DEFAULT_MONITOR_DIR = os.environ.get(
     "MONITOR_DIR_PATH",
-    rf"{PROJECT_PATH}/webui/database"
+    rf""
 )
 
 # 页面配置
-st.set_page_config(page_title="Flash RAG 知识库检索", page_icon="🔍", layout="wide")
-st.title("🔍 Flash RAG 知识库检索系统")
+st.set_page_config(page_title="Manus RAG 知识库检索", page_icon="🔍", layout="wide")
+st.title("🔍 Manus RAG 知识库检索系统")
 
 # 添加JavaScript来保持滚动位置
 js_code = """
@@ -740,9 +740,9 @@ with st.container():
                         st.error(f"搜索时出错: {str(e)}")
                         st.session_state.rag_processing_query = False
     
-    user_query = st.chat_input(placeholder="请输入您的问题，例如：什么是Flash RAG?")
+    user_query = st.chat_input(placeholder="请输入您的问题，例如：什么是Manus RAG?")
     if user_query:
         process_query(user_query)
 
 st.markdown("---")
-st.caption("© 2024 Flash RAG 知识库检索系统")
+st.caption("© 2024 Manus RAG 知识库检索系统")
