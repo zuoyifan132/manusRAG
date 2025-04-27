@@ -14,12 +14,11 @@ from datetime import datetime
 import streamlit as st
 from components.sidebar import FlashSidebar
 from components.faq import truncate_markdown_table
-from core.api_deepseek import LLMCaller
-# from core.flash_agent import FlashAgentPlanner
-from utils.tool_util import TOOLS, TOOLS_DESC
+from webui.utils.aigc_api import LLMCaller
+from webui.utils.tool_util import TOOLS, TOOLS_DESC
 from manus.manus_deep_search_agent import DeepSearch
 from manus.llm import OpenAILLM
-from utils.aigc_api import openai_stream_generate
+from webui.utils.aigc_api import openai_stream_generate
 from openai import OpenAI
 from services.config import OPENAI_API_KEY
 from collections import defaultdict
