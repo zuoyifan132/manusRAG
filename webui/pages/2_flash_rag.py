@@ -16,7 +16,7 @@ from components.sidebar import RagSidebar
 from webui.utils.file_monitor import file_monitor
 
 ABS_PATH = Path(__file__).absolute()
-PROJECT_PATH = ABS_PATH.parent.parent.parent
+PROJECT_PATH = ABS_PATH.parent.parent
 
 # 创建临时文件夹
 TEMP_DIR = os.path.join(PROJECT_PATH, "temp_uploads")

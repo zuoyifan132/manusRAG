@@ -162,6 +162,8 @@ def parse_pdf_file(file_content: bytes, parse_strategy: str) -> Dict:
     pdf_parser_obj: Type[PDFParser] = PDFPARSE_STRATEGY_MAP[parse_strategy]
 
     pdf_path = f"./__upload_file__/{uuid.uuid4().hex}.pdf"
+    if not os.path.exists("./__upload_file__"):
+        os.makedirs("./__upload_file__")
     with open(pdf_path, "wb") as f:
         f.write(file_content)
 
@@ -190,6 +192,8 @@ def parse_markdown_file(file_content: bytes, parse_strategy: str) -> Dict:
     markdown_parser_obj: Type[MarkdownParser] = MARKDOWN_PARSER_STRATEGY_MAP[parse_strategy]
 
     markdown_path = f"./__upload_file__/{uuid.uuid4().hex}.md"
+    if not os.path.exists("./__upload_file__"):
+        os.makedirs("./__upload_file__")
     with open(markdown_path, "wb") as f:
         f.write(file_content)
 
@@ -218,6 +222,8 @@ def parse_word_file(file_content: bytes, parse_strategy: str) -> Dict:
     word_parser_obj: Type[WordParser] = WORD_PARSER_STRATEGY_MAP[parse_strategy]
 
     word_path = f"./__upload_file__/{uuid.uuid4().hex}.docx"
+    if not os.path.exists("./__upload_file__"):
+        os.makedirs("./__upload_file__")
     with open(word_path, "wb") as f:
         f.write(file_content)
 
